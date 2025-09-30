@@ -3,22 +3,19 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   Alert,
   TouchableOpacity,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App'; // ปรับ path ตามจริง
+import { RootStackParamList } from '../../App';
+import AuthTabHeader from '../Component/AuthTabHeader';
 
-import RegisterScreen from './RegisterScreen';
 
 type Login = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
-};
-
-type Register = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>
 };
 
 const LoginScreen: React.FC<Login> = ({ navigation }) => {
@@ -33,79 +30,113 @@ const LoginScreen: React.FC<Login> = ({ navigation }) => {
     }
   };
 
-  const gotoRegister = () => {
-    navigation.navigate('Register');
-  }
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#7ED321" />
+      
+      {/* Header */}
+      <AuthTabHeader activeTab="login" />
 
- return (
-    <View style={styles.container}>
-      <Text style={styles.title}>เข้าสู่ระบบ</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="อีเมล"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="รหัสผ่าน"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-        autoCapitalize="none"
-      />
-      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Login</Text>
-      </TouchableOpacity>
+      {/* Main Content */}
+      <View style={styles.content}>
+        {/* Illustration Area */}
+        <View style={styles.illustrationContainer}>
+          <Text style={styles.illustrationText}>🥕🥬🍇🍊</Text>
+          <Text style={styles.illustrationSubtext}>Fresh & Healthy</Text>
+        </View>
 
-      <TouchableOpacity style={styles.registerButton} onPress={gotoRegister}>
-        <Text style={styles.registerButtonText}>Register</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Form */}
+        <View style={styles.formContainer}>
+          <Text style={styles.inputLabel}>E-mail</Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+
+          <Text style={styles.inputLabel}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder=""
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            autoCapitalize="none"
+          />
+
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>Login</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#faebd9',
+    backgroundColor: '#7ED321',
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#68874e',
-    marginBottom: 30,
+  content: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  illustrationContainer: {
+    alignItems: 'center',
+    marginTop: 40,
+    marginBottom: 60,
+  },
+  illustrationText: {
+    fontSize: 48,
+    marginBottom: 10,
+  },
+  illustrationSubtext: {
+    fontSize: 16,
+    color: '#555',
+    fontWeight: '500',
+  },
+  formContainer: {
+    flex: 1,
+  },
+  inputLabel: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
+    marginBottom: 8,
+    marginTop: 1,
   },
   input: {
-    width: '90%',
-    backgroundColor: '#fff',
-    borderWidth: 2,
-    borderColor: '#68874e',
-    borderRadius: 18,
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    fontSize: 15,
-    color: '#2c3e50',
-    marginBottom: 14,
+    backgroundColor: 'transparent',
+    borderBottomWidth: 2,
+    borderBottomColor: '#fff',
+    paddingVertical: 12,
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 10,
   },
   loginButton: {
-    backgroundColor: '#68874e',
-    borderRadius: 19,
-    paddingVertical: 10,
+    backgroundColor: '#FF9500',
+    borderRadius: 25,
+    paddingVertical: 15,
     alignItems: 'center',
-    marginTop: 15,
-    width: '50%',
-  
+    marginTop: 25,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   loginButtonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 });
 

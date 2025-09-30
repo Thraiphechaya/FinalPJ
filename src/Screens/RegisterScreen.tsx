@@ -9,9 +9,19 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import AuthTabHeader from '../Component/AuthTabHeader';
+import { StackNavigationProp } from '@react-navigation/stack';
+
+import LoginScreen from './LoginScreen';
+
+type RootStackParamList = {
+  Login: undefined;
+};
+
 interface RegisterFormData {
   firstName: string;
   lastName: string;
@@ -29,6 +39,8 @@ interface FormErrors {
   password?: string;
   confirmPassword?: string;
 }
+
+
 const RegisterScreen: React.FC = () => {
   const [formData, setFormData] = useState<RegisterFormData>({
     firstName: '',
@@ -41,12 +53,7 @@ const RegisterScreen: React.FC = () => {
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'login' | 'signup'>('signup');
   const navigation = useNavigation();
-
-  const gotoLogin = () => {
-    navigation.navigate('Login') 
-  };
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -78,25 +85,11 @@ const RegisterScreen: React.FC = () => {
       newErrors.email = 'รูปแบบอีเมลไม่ถูกต้อง';
     }
 
-    // ตรวจสอบเบอร์โทร
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'กรุณากรอกเบอร์โทรศัพท์';
-    } else if (!validatePhone(formData.phone)) {
-      newErrors.phone = 'เบอร์โทรศัพท์ต้องเป็นตัวเลข 10 หลัก';
-    }
-
     // ตรวจสอบรหัสผ่าน
     if (!formData.password) {
       newErrors.password = 'กรุณากรอกรหัสผ่าน';
     } else if (formData.password.length < 6) {
       newErrors.password = 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
-    }
-
-    // ตรวจสอบยืนยันรหัสผ่าน
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'กรุณายืนยันรหัสผ่าน';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'รหัสผ่านไม่ตรงกัน';
     }
 
     setErrors(newErrors);
@@ -129,7 +122,7 @@ const RegisterScreen: React.FC = () => {
           {
             text: 'ตกลง',
             onPress: () => {
-              console.log('Navigate to login or home');
+              navigation.navigate('Login');
             },
           },
         ]
@@ -143,29 +136,14 @@ const RegisterScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="#7ED321" />
+      
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoid}
       >
-        {/* Tab Navigation */}
-        <View style={styles.tabContainer}>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'login' && styles.activeTab]}
-            onPress={gotoLogin}
-          >
-            <Text style={[styles.tabText, activeTab === 'login' && styles.activeTabText]}>
-              Login
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tab, activeTab === 'signup' && styles.activeTab]}
-            onPress={() => setActiveTab('signup')}
-          >
-            <Text style={[styles.tabText, activeTab === 'signup' && styles.activeTabText]}>
-              Sign up
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* Header Tabs */}
+        <AuthTabHeader activeTab="signup" />
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -255,34 +233,10 @@ const RegisterScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#8FD49C',
+    backgroundColor: '#7ED321',
   },
   keyboardAvoid: {
     flex: 1,
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    marginHorizontal: 0,
-    marginTop: 0,
-  },
-  tab: {
-    flex: 1,
-    paddingVertical: 16,
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  activeTab: {
-    backgroundColor: '#8FD49C',
-  },
-  tabText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#666',
-  },
-  activeTabText: {
-    color: '#fff',
-    fontWeight: '600',
   },
   scrollContent: {
     flexGrow: 1,
@@ -297,19 +251,19 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#fff',
+    fontWeight: '600',
+    color: '#000',
     marginBottom: 8,
   },
   input: {
     backgroundColor: 'transparent',
     borderWidth: 0,
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomColor: '#fff',
     paddingHorizontal: 0,
-    paddingVertical: 10,
+    paddingVertical: 12,
     fontSize: 16,
-    color: '#fff',
+    color: '#000',
   },
   inputError: {
     borderBottomColor: '#FF6B6B',
@@ -320,9 +274,9 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   registerButton: {
-    backgroundColor: '#FF8C69',
+    backgroundColor: '#FF9500',
     borderRadius: 25,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     marginTop: 40,
     shadowColor: '#000',
@@ -341,8 +295,8 @@ const styles = StyleSheet.create({
   },
   registerButtonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '600',
     letterSpacing: 1,
   },
 });
