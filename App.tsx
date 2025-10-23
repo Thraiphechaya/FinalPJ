@@ -6,10 +6,28 @@ import { View, } from 'react-native-reanimated/lib/typescript/Animated';
 import LoginScreen from './src/Screens/LoginScreen';
 import RegisterScreen from './src/Screens/RegisterScreen';
 import HomeScreen from './src/Screens/HomeScreens';
-import Tabbar from './src/Component/Tabbar';
 import SnapScreen from './src/Screens/Snap';
 import FavoriteScreen from './src/Screens/Faavorite';
 import SearchScreen from './src/Screens/SearchScreen';
+import DetailScreen from './src/Screens/DetailScreen';
+
+import FoodListButton from './src/Component/FoodListButton';
+import Tabbar from './src/Component/Tabbar';
+
+
+import MenuStrawberry from './src/MenuFood/MenuStrawberry';
+import StrawberryScreen from './src/DetailFruit/StrawberryScreen';
+import DetailFoodStrawberry2 from './src/DetailFood/Strawberry/FreshStrawberryMilk';
+import SmoothieStrawberry from './src/DetailFood/Strawberry/SmoothieStrawberry';
+import StrawberryIceCream from './src/DetailFood/Strawberry/StrawberryIceCream';
+import FreshStrawberryMilk from './src/DetailFood/Strawberry/FreshStrawberryMilk';
+
+
+import BananaScreen from './src/DetailFruit/BananaScreen';
+import MenuBanana from './src/MenuFood/MenuBanana';
+import BananaCake from './src/DetailFood/Banana/BananaCake';
+import CaramelBananaToast from './src/DetailFood/Banana/CaramelBananaToast';
+import ButteredBanana from './src/DetailFood/Banana/ButteredBanana';
 
 export type RootStackParamList = {
   Login: undefined;
@@ -19,6 +37,23 @@ export type RootStackParamList = {
   Snap : undefined;
   Favorite : undefined;
   Search : undefined;
+  Detail : undefined;
+
+
+  Strawberry : undefined;
+  MenuStrawberry : undefined;
+  SmoothieStrawberry : undefined;
+  FreshStrawberryMilk : undefined;
+  StrawberryIceCream : undefined;
+
+
+  Banana : undefined;
+  MenuBanana : undefined;
+  BananaCake : undefined;
+  CaramelBananaToast : undefined;
+  ButteredBanana: undefined;
+
+  
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -28,7 +63,7 @@ const App: React.FC = () => {
     
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="Detail"
         screenOptions={{
           headerStyle: {
             backgroundColor: '#68874e',
@@ -50,6 +85,22 @@ const App: React.FC = () => {
         <Stack.Screen name= "Favorite" component={FavoriteScreen}/>
         <Stack.Screen name="Tabbar" component={Tabbar} />
         <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Detail" component={DetailScreen} />
+
+
+        <Stack.Screen name="Strawberry" component={StrawberryScreen}/>
+        <Stack.Screen name="MenuStrawberry" component={MenuStrawberry}/>
+        <Stack.Screen name="SmoothieStrawberry" component={SmoothieStrawberry}/>
+        <Stack.Screen name="FreshStrawberryMilk" component={FreshStrawberryMilk}/>
+        <Stack.Screen name="StrawberryIceCream" component={StrawberryIceCream}/>
+
+        <Stack.Screen name="Banana" component={BananaScreen}/>
+        <Stack.Screen name="MenuBanana" component={MenuBanana}/>
+        <Stack.Screen name="BananaCake" component={BananaCake}/>
+        <Stack.Screen name="CaramelBananaToast" component={CaramelBananaToast}/>
+        <Stack.Screen name="ButteredBanana" component={ButteredBanana}/>
+
+        
       </Stack.Navigator>
     </NavigationContainer>
 

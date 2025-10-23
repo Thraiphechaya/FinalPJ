@@ -21,7 +21,7 @@ const AuthTabHeader: React.FC<AuthTabHeaderProps> = ({ activeTab }) => {
 
   const handleSignupPress = () => {
     if (activeTab !== 'signup') {
-      navigation.navigate('Register');
+      navigation.navigate('Detail');
     }
   };
 
