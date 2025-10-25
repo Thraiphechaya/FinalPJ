@@ -3,29 +3,22 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RootStackParamList } from '../types';
+import { RootStackParamList } from '../../App';
 
-type OrangeScreenNav = NativeStackNavigationProp<RootStackParamList, 'OrangeScreen'>;
+type OrangeScreenNav = NativeStackNavigationProp<RootStackParamList, 'Orange'>;
 
 const OrangeScreen = () => {
   const navigation = useNavigation<OrangeScreenNav>();
 
   const nutritionData = [
-    { label: 'พลังงาน', value: '118 กิโลแคลอรี่', icon: 'fire' },
-    { label: 'ไขมันทั้งหมด', value: '0.15 กรัม', icon: 'water' },
-    { label: 'ใยอาหาร', value: '2,4 กรัม', icon: 'food-apple' },
+    { label: 'พลังงาน', value: '60 กิโลแคลอรี่', icon: 'fire' },
     { label: 'คาร์โบไฮเดรต', value: '27.18 กรัม', icon: 'wheat' },
-    { label: 'แคลเซียม', value: '7 มิลลิกรัม', icon: 'bone' },
-    { label: 'ฟอสฟอรัส', value: '26 มิลลิกรัม', icon: 'periodic-table' },
-    { label: 'ธาตุเหล็ก', value: '0.52 มิลลิกรัม', icon: 'magnet' },
-    { label: 'โพแทสเซียม', value: '241 มิลลิกรัม', icon: 'atom' },
-    { label: 'ทองแดง', value: '0.08 มิลลิกรัม', icon: 'copper' },
-    { label: 'สังกะสี', value: '0.13 มิลลิกรัม', icon: 'zinc' },
-    { label: 'วิตามินเอ', value: '3 ไมโครกรัม', icon: 'eye' },
-    { label: 'วิตามินซี', value: '13 มิลลิกรัม', icon: 'fruit-citrus' },
-    { label: 'น้ำตาลรวม', value: '18.47 กรัม', icon: 'candy' },
-    { label: 'แมกนีเซียม', value: '25 มิลลิกรัม', icon: 'magnet-on' },
-    { label: 'โปรตีนรวม', value: '0.78 กรัม', icon: 'protein' },
+    { label: 'แคลเซียม', value: '6%  ของปริมาณที่ควรได้รับในแต่ละวัน', icon: 'bone' },
+    { label: 'โพแทสเซียม', value: '237 มิลลิกรัม', icon: 'atom' },
+    { label: 'วิตามินเอ', value: '14 ไมโครกรัม', icon: 'eye' },
+    { label: 'วิตามินซี', value: '70 มิลลิกรัม', icon: 'fruit-citrus' },
+    { label: 'น้ำตาลรวม', value: '12 กรัม', icon: 'candy' },
+    { label: 'โปรตีนรวม', value: '1 กรัม', icon: 'drug-pack' },
   ];
 
   return (
@@ -40,15 +33,15 @@ const OrangeScreen = () => {
         <View style={styles.heroCard}>
           <Image
             source={{
-              uri: 'https://st.bigc-cs.com/cdn-cgi/image/format=webp,quality=90/public/media/catalog/product/30/20/2000007266230/2000007266230_1-20250314103554-.jpg',
+              uri: 'https://veggiepeak-fastapi-app-images.s3.ap-southeast-2.amazonaws.com/Fruits/Orange.jfif',
             }}
             style={styles.image}
           />
           <View style={styles.heroContent}>
-            <Text style={styles.title}>กล้วยน้ำว้า</Text>
+            <Text style={styles.title}>Orange(ส้ม)</Text>
             <View style={styles.tasteTag}>
               <MaterialCommunityIcons name="fruit-cherries" size={16} color="#FF6B6B" />
-              <Text style={styles.tasteText}>รสหวาน กลิ่นหอมเฉพาะตัว</Text>
+              <Text style={styles.tasteText}>รสชาติของส้มโดยทั่วไปคือ หวานอมเปรี้ยว พร้อมกลิ่นหอมสดชื่น แตกต่างกันไปตามสายพันธุ์</Text>
             </View>
           </View>
         </View>
@@ -59,7 +52,7 @@ const OrangeScreen = () => {
             <MaterialCommunityIcons name="nutrition" size={24} color="#4CAF50" />
             <Text style={styles.sectionTitle}>คุณค่าทางโภชนาการ </Text>
           </View>
-          <Text style={styles.sectionSubtitle}>ต่อ 100 กรัม</Text>
+          <Text style={styles.sectionSubtitle}>ต่อ 130 กรัม</Text>
         
           <View style={styles.nutritionGrid}>
             {nutritionData.map((item, index) => (
@@ -85,16 +78,16 @@ const OrangeScreen = () => {
           </View>
           <View style={styles.benefitsList}>
             <View style={styles.benefitItem}>
-              <MaterialCommunityIcons name="stomach" size={16} color="#4CAF50" />
-              <Text style={styles.benefitText}>บรรเทาอาหารท้องผูก ท้องเสีย</Text>
+              <MaterialCommunityIcons name="heart" size={16} color="#f7105dff" />
+              <Text style={styles.benefitText}>ช่วยป้องกันโรคหัวใจ</Text>
             </View>
             <View style={styles.benefitItem}>
-              <MaterialCommunityIcons name="spa" size={16} color="#FF6B6B" />
-              <Text style={styles.benefitText}>บำรุงผิวพรรณ</Text>
+              <MaterialCommunityIcons name="eye" size={16} color="#956bffff" />
+              <Text style={styles.benefitText}>ช่วยป้องกันจอประสาทตาเสื่อม</Text>
             </View>
             <View style={styles.benefitItem}>
               <MaterialCommunityIcons name="medical-bag" size={16} color="#2196F3" />
-              <Text style={styles.benefitText}>อดโอกาสการเป็นโรคเบาหวาน</Text>
+              <Text style={styles.benefitText}>ช่วยบรรเทาอาการไข้หวัด</Text>
             </View>
             
           </View>

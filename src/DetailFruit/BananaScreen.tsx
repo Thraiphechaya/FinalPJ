@@ -3,9 +3,8 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RootStackParamList } from '../types';
-
-type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaScreen'>;
+import { RootStackParamList } from '../../App';
+type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'Banana'>;
 
 const BananaScreen = () => {
   const navigation = useNavigation<BananaScreenNav>();
@@ -30,7 +29,6 @@ const BananaScreen = () => {
 
   return (
     <View style={styles.container}>
-      
       <ScrollView 
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -65,7 +63,6 @@ const BananaScreen = () => {
             {nutritionData.map((item, index) => (
               <View key={index} style={styles.nutritionItem}>
                 <View style={styles.nutritionIcon}>
-                  
                   <MaterialCommunityIcons name={item.icon as any} size={20} color="#4CAF50" />
                 </View>
                 <View style={styles.nutritionText}>
@@ -96,7 +93,6 @@ const BananaScreen = () => {
               <MaterialCommunityIcons name="medical-bag" size={16} color="#2196F3" />
               <Text style={styles.benefitText}>อดโอกาสการเป็นโรคเบาหวาน</Text>
             </View>
-            
           </View>
         </View>
       </ScrollView>

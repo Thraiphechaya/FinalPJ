@@ -3,46 +3,42 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RootStackParamList } from '../../types';
+import { RootStackParamList } from '../../types'; // 
 
-type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaScreen'>;
+type AppleScreenNav = NativeStackNavigationProp<RootStackParamList, 'AppleScreen'>; 
 
-const ButteredBanana = () => {
-  const navigation = useNavigation<BananaScreenNav>();
+const AppleSalad = () => { 
+  const navigation = useNavigation<AppleScreenNav>();
 
-  const ingredients = [
-    { name: 'กล้วยหอมดิบ', amount: '1 หวี' },
-    { name: 'น้ำตาลมะพร้าว', amount: '3 ช้อนโต๊ะ' },
-    { name: 'เนยสด', amount: '100 กรัม' },
-    { name: 'น้ำมันพืช', amount: '2 ถ้วยตวง' },
+  const mainIngredients = [
+    { name: 'แอปเปิ้ลเขียว', amount: '1/2 ลูก' },
+    { name: 'แอปเปิ้ลแดง', amount: '1/2 ลูก' },
+    { name: 'น้ำสลัด (ตามชอบ)', amount: '2 ช้อนโต๊ะ' },
+    { name: 'ผักสลัด (ตามชอบ)', amount: '1 ถ้วย' },
+    { name: 'มะเขือเทศราชินี', amount: '3-4 ลูก' },
+    { name: 'อัลมอนด์ หรือ ถั่ว (ตามชอบ)', amount: '1 ช้อนโต๊ะ' },
   ];
 
   const steps = [
     { 
       number: 1, 
-      title: 'เตรียมกล้วย',
-      text: 'นำกล้วยหอมดิบมาตัดหัวตัดหาง แล้วแช่น้ำไว้ 1 คืน เพื่อให้ยางออก',
-      subSteps: [
-        'เมื่อครบเวลานำกล้วยมาปลอกเปลือกและหั่นเป็นวงกลม ๆ ไม่ต้องหนามาก'
-      ]
+      text: 'ล้างผักสลัดและแอปเปิ้ลให้สะอาด สะเด็ดน้ำ'
     },
     { 
       number: 2, 
-      title: 'ทอด',
-      text: 'ตั้งกระทะใส่น้ำมันพืช พอน้ำมันร้อนก็ใส่เนยและน้ำตาลมะพร้าวลงไปคนให้ละลาย',
-      subSteps: [
-        'นำกล้วยลงทอด',
-        'คอยคนกล้วยตลอด ๆ'
-      ]
+      text: 'หั่นแอปเปิ้ลเขียวและแดง เป็นชิ้นสี่เหลี่ยมลูกเต๋าพอดีคำ'
     },
     { 
       number: 3, 
-      title: 'เสิร์ฟ',
-      text: 'เมื่อกล้วยสุกสีเริ่มเหลืองแล้ว ตักขึ้นระวังอย่าให้สีเข้มเกิน',
-      subSteps: [
-        'เมื่อตักขึ้นมาแล้วสีจะเข้มขึ้นไปอีก',
-        'จัดเสิร์ฟ ตกแต่งให้สวยงาม'
-      ]
+      text: 'จัดผักสลัดใส่ชาม ตามด้วยมะเขือเทศ'
+    },
+    { 
+      number: 4, 
+      text: 'โรยหน้าด้วยแอปเปิ้ลที่หั่นไว้ และอัลมอนด์'
+    },
+    { 
+      number: 5, 
+      text: 'ราดด้วยน้ำสลัดตามชอบ คลุกเคล้าให้เข้ากันก่อนเสิร์ฟ'
     },
   ];
 
@@ -57,15 +53,15 @@ const ButteredBanana = () => {
         <View style={styles.heroCard}>
           <Image
             source={{
-              uri: 'https://img.wongnai.com/p/800x0/2019/02/02/a272beb75658451e8bc16928751f30f9.jpg',
+              uri: 'https://www.eatingwell.com/thmb/CiVr9DLyt6qjo2-KLHQ-7rRtDkk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/5456742-76759cc86ebf42cb93ef9c40b62e33a8.jpg',
             }}
             style={styles.image}
           />
           <View style={styles.heroContent}>
-            <Text style={styles.title}>กล้วยอบเนย</Text>
-            <View style={styles.tasteTag}>
-              <MaterialCommunityIcons name={("fruit-banana" as any)} size={16} color="#FFD700" />
-              <Text style={styles.tasteText}>หวานหอมจากกล้วยหอมและเนยสด</Text>
+            <Text style={styles.title}>สลัดแอปเปิ้ล</Text>
+            <View style={[styles.tasteTag, { backgroundColor: '#E8F5E9' }]}>
+              <MaterialCommunityIcons name="leaf" size={16} color="#4CAF50" />
+              <Text style={[styles.tasteText, { color: '#4CAF50' }]}>สดชื่น เบาท้อง ไฟเบอร์สูง</Text>
             </View>
           </View>
         </View>
@@ -75,36 +71,34 @@ const ButteredBanana = () => {
           <View style={styles.timeItem}>
             <MaterialCommunityIcons name="clock-outline" size={20} color="#4CAF50" />
             <Text style={styles.timeLabel}>เวลาเตรียม</Text>
-            <Text style={styles.timeValue}>1 คืน</Text>
+            <Text style={styles.timeValue}>10 นาที</Text>
           </View>
           <View style={styles.timeSeparator} />
           <View style={styles.timeItem}>
             <MaterialCommunityIcons name="chef-hat" size={20} color="#FF9800" />
             <Text style={styles.timeLabel}>เวลาปรุง</Text>
-            <Text style={styles.timeValue}>15 นาที</Text>
+            <Text style={styles.timeValue}>0 นาที</Text>
           </View>
           <View style={styles.timeSeparator} />
           <View style={styles.timeItem}>
-            <MaterialCommunityIcons name="account-group" size={20} color="#2196F3" />
+            <MaterialCommunityIcons name="scale" size={20} color="#2196F3" />
             <Text style={styles.timeLabel}>สำหรับ</Text>
-            <Text style={styles.timeValue}>2-3 ที่</Text>
+            <Text style={styles.timeValue}>1 ที่</Text>
           </View>
         </View>
 
-        {/* Ingredients Section */}
+        {/* Main Ingredients Section */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="food-apple" size={24} color="#FFD700" />
+            <MaterialCommunityIcons name={("food-apple" as any)} size={24} color="#F44336" />
             <View>
-              <Text style={styles.sectionTitle}>วัตถุดิบ</Text>
-              <Text style={styles.sectionSubtitle}>สำหรับกล้วยอบเนย</Text>
+              <Text style={styles.sectionTitle}>ส่วนผสมทั้งหมด</Text>
             </View>
           </View>
-          
           <View style={styles.ingredientsList}>
-            {ingredients.map((item, index) => (
+            {mainIngredients.map((item, index) => (
               <View key={index} style={styles.ingredientItem}>
-                <View style={[styles.ingredientDot, { backgroundColor: '#FF9800' }]} />
+                <View style={[styles.ingredientDot, { backgroundColor: '#F44336' }]} />
                 <View style={styles.ingredientText}>
                   <Text style={styles.ingredientName}>{item.name}</Text>
                   <Text style={styles.ingredientAmount}>{item.amount}</Text>
@@ -118,27 +112,18 @@ const ButteredBanana = () => {
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
             <MaterialCommunityIcons name="chef-hat" size={24} color="#FF6B6B" />
-            <Text style={styles.sectionTitle}>วิธีทำกล้วยอบเนย</Text>
+            <Text style={styles.sectionTitle}>วิธีทำ</Text>
           </View>
-          
           <View style={styles.stepsList}>
             {steps.map((step, index) => (
               <View key={index} style={styles.stepItem}>
                 <View style={styles.stepNumberContainer}>
                   <View style={styles.stepNumber}>
-                    <Text style={styles.stepNumberText}>STEP {step.number}</Text>
+                    <Text style={styles.stepNumberText}>{step.number}</Text>
                   </View>
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>{step.title}</Text>
                   <Text style={styles.stepText}>{step.text}</Text>
-                  
-                  {step.subSteps && step.subSteps.map((subStep, subIndex) => (
-                    <View key={subIndex} style={styles.subStepItem}>
-                      <View style={styles.subStepDot} />
-                      <Text style={styles.subStepText}>{subStep}</Text>
-                    </View>
-                  ))}
                 </View>
               </View>
             ))}
@@ -152,42 +137,19 @@ const ButteredBanana = () => {
             <Text style={styles.sectionTitle}>เคล็ดลับสำคัญ</Text>
           </View>
           <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="water" size={16} color="#2196F3" />
-            <Text style={styles.tipText}>แช่กล้วยดิบในน้ำ 1 คืนเพื่อให้ยางออก</Text>
+            <MaterialCommunityIcons name={("food-apple" as any)} size={16} color="#F44336" />
+            <Text style={styles.tipText}>หั่นแอปเปิ้ลแล้วควรแช่น้ำเกลือหรือน้ำมะนาวเจือจางเล็กน้อย กันไม่ให้แอปเปิ้ลสีคล้ำ (ดำ)</Text>
           </View>
           <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="fire" size={16} color="#FF6B6B" />
-            <Text style={styles.tipText}>ควบคุมไฟให้ได้ที่เพื่อไม่ให้กล้วยไหม้</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="eye" size={16} color="#4CAF50" />
-            <Text style={styles.tipText}>ตักกล้วยขึ้นก่อนสีเข้มเกิน เพราะสีจะเข้มขึ้นหลังตัก</Text>
-          </View>
-        </View>
-
-        {/* Serving Suggestion */}
-        <View style={styles.sectionCard}>
-          <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="food" size={24} color="#9C27B0" />
-            <Text style={styles.sectionTitle}>คำแนะนำในการเสิร์ฟ</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>เสิร์ฟร้อน ๆ จะกรอบและหอมยิ่งขึ้น</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>ตกแต่งด้วยใบมินต์หรืองาดำให้สวยงาม</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>ทานคู่กับไอศครีมวานิลลาได้</Text>
+            <MaterialCommunityIcons name="plus-circle-outline" size={16} color="#4CAF50" />
+            <Text style={styles.tipText}>เพิ่มโปรตีนได้ง่ายๆ ด้วยการใส่ไข่ต้ม อกไก่ย่าง หรือทูน่า</Text>
           </View>
         </View>
       </ScrollView>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -347,7 +309,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#FF9800',
+    backgroundColor: '#8B4513',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 2,
@@ -363,7 +325,7 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FF9800',
+    color: '#8B4513',
     marginBottom: 6,
   },
   stepText: {
@@ -409,4 +371,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ButteredBanana;
+
+export default AppleSalad;

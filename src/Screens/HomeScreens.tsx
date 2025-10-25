@@ -8,6 +8,7 @@ import {
   StatusBar,
   Alert,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -65,7 +66,7 @@ interface DisplayItem {
 
 // ===== COMPONENT =====
 const HomeScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation: any = useNavigation();
   
   // ===== STATE MANAGEMENT =====
   const [vegetables, setVegetables] = useState<Vegetable[]>([]);
@@ -520,8 +521,7 @@ const HomeScreen: React.FC = () => {
           style={styles.scrollView}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.scrollContent}
-          refreshing={loading}
-          onRefresh={fetchAllData} // Pull-to-refresh
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchAllData} />}
         >
           {combinedItems.length > 0 ? (
             <>

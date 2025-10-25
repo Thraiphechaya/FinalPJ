@@ -4,7 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 
 
 export const FoodListButton = () => {
-  const navigation = useNavigation();
+  // navigation typing is intentionally relaxed here because app-wide
+  // RootStack types vary across files in this repo clone.
+  const navigation: any = useNavigation();
 
   return (
     <TouchableOpacity

@@ -1,0 +1,217 @@
+import React from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { RootStackParamList } from '../types';
+
+type MenuOrangeNav = NativeStackNavigationProp<RootStackParamList, 'MenuOrange'>;
+
+const MenuOrange = () => {
+  const navigation = useNavigation<MenuOrangeNav>();
+
+  const menus = [
+    {
+      id: 1,
+      name: 'น้ำส้มคั้น',
+      image: 'https://s359.kapook.com/pagebuilder/3c09c1ab-5e43-49db-99af-a985a2d8c61b.jpg',
+      detail: 'เครื่องดื่มคลาสสิกที่ให้วิตามินซีสูงและให้ความสดชื่นได้ทันที',
+      icon: 'cup',
+      color: '#f1a152ff',
+    },
+    {
+      id: 2,
+      name: 'วุ้นส้มนมเปรี้ยว',
+      image: 'https://img.wongnai.com/p/1600x0/2024/12/09/92bdd0957f664ea7b3087928d87561a0.jpg',
+      detail: 'วุ้นส้มนมเปรี้ยวเป็นของหวานที่ทำได้ง่าย โดยการนำวุ้นส้มมาทำเป็นชั้นล่างและวุ้นนมเปรี้ยวเป็นชั้นบน หรือจะผสมทุกอย่างเข้าด้วยกันก็ได้',
+      icon: 'jellyfish',
+      color: '#e9a143ff',
+    },
+    {
+      id: 3,
+      name: 'ส้มเช้งลอยแก้ว',
+      image: 'https://variety.teenee.com/foodforbrain/img7/126689.jpg',
+      detail: 'ผลไม้รสเปรี้ยว นำมาลอยแก้ว เปรี้ยวอมหวาน หอมน้ำลอยดอกมะลิ หวานเย็น ชื่นใจ ใส่เกลือเล็กน้อยอร่อยเลย !',
+      icon: 'leaf',
+      color: '#FF9800',
+    },
+  ];
+
+  return (
+    <View style={styles.container}>
+      {/* Header 
+      <View style={styles.header}>
+        <Text style={styles.time}>9:41</Text>
+      </View>
+      */}
+
+      {/* Main Content */}
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Title Section */}
+        <View style={styles.titleSection}>
+          <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
+          <Text style={styles.title}>Recommended Menu</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากส้ม </Text>
+        </View>
+
+        {/* Menu Cards */}
+        {menus.map((menu) => (
+          <TouchableOpacity
+            key={menu.id}
+            style={styles.card}
+            onPress={() => {
+              if (menu.id === 1) {
+                navigation.navigate('JuiceOrange');
+              } else if (menu.id === 2) {
+                navigation.navigate('JellyOrange');
+              } else if (menu.id === 3) {
+                navigation.navigate('SomChengLoiKaew');
+              }
+            }}
+          >
+            <View style={styles.cardHeader}>
+              <View style={[styles.iconContainer, { backgroundColor: `${menu.color}20` }]}>
+                <MaterialCommunityIcons name={menu.icon as any} size={24} color={menu.color} />
+              </View>
+              <Text style={styles.name}>{menu.name}</Text>
+            </View>
+            
+            <Image source={{ uri: menu.image }} style={styles.image} />
+            
+            <View style={styles.textContainer}>
+              <Text style={styles.detail}>{menu.detail}</Text>
+              
+              <View style={styles.actionButton}>
+                <Text style={styles.actionText}>ดูสูตรการทำ</Text>
+                <MaterialCommunityIcons name="chevron-right" size={20} color="#4CAF50" />
+              </View>
+            </View>
+          </TouchableOpacity>
+        ))}
+        
+        {/* Bottom Space */}
+        <View style={styles.bottomSpace} />
+      </ScrollView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#A4E4A0',
+  },
+  header: {
+    paddingTop: 50,
+    paddingHorizontal: 20,
+    paddingBottom: 10,
+  },
+  time: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#000',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 16,
+    paddingTop: 10,
+  },
+  titleSection: {
+    alignItems: 'center',
+    marginBottom: 25,
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#2E7D32',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    marginBottom: 20,
+    overflow: 'hidden',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    paddingBottom: 0,
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    flex: 1,
+  },
+  image: {
+    width: '100%',
+    height: 180,
+    marginTop: 12,
+  },
+  textContainer: {
+    padding: 20,
+  },
+  detail: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
+    marginBottom: 16,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#F0F9F0',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E8F5E8',
+  },
+  actionText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#4CAF50',
+  },
+  bottomSpace: {
+    height: 30,
+  },
+});
+
+export default MenuOrange;

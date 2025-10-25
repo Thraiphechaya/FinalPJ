@@ -3,69 +3,60 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RootStackParamList } from '../../types';
+import { RootStackParamList } from '../../types'; // สมมติว่า path นี้ถูกต้อง
 
-type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaScreen'>;
+type AppleScreenNav = NativeStackNavigationProp<RootStackParamList, 'AppleScreen'>; 
 
-const BananaCake = () => {
-  const navigation = useNavigation<BananaScreenNav>();
+const ApplePie = () => { // 
+  const navigation = useNavigation<AppleScreenNav>();
 
   const mainIngredients = [
-    { name: 'กล้วยน้ำว้าสุก', amount: '6 ลูก' },
-    { name: 'กะทิ', amount: '300 ml' },
-    { name: 'แป้งข้าวจ้าว', amount: '60 กรัม' },
-    { name: 'แป้งข้าวโพด', amount: '15 กรัม' },
-    { name: 'แป้งมัน', amount: '15 กรัม' },
-    { name: 'แป้งท้าวยายม่อม', amount: '30 กรัม' },
-    { name: 'น้ำตาลมะพร้าว', amount: '120 กรัม' },
-    { name: 'น้ำตาลทราย', amount: '30 กรัม' },
-  ];
-
-  const toppingIngredients = [
-    { name: 'กะทิ', amount: '250 ml' },
-    { name: 'แป้งถั่วเขียว', amount: '2 ช้อนชา' },
-    { name: 'แป้งข้าวจ้าว', amount: '1 ช้อนชา' },
-    { name: 'เกลือ', amount: '1/2 ช้อนชา' },
-    { name: 'น้ำตาลทราย', amount: '1 ช้อนโต๊ะ' },
+    { name: 'แป้งพายสำเร็จรูป (แช่แข็ง)', amount: '2 แผ่น' },
+    { name: 'แอปเปิ้ลเขียว (ปอกเปลือก หั่นเต๋า)', amount: '3-4 ลูก' },
+    { name: 'น้ำตาลทราย (หรือน้ำตาลทรายแดง)', amount: '1/3 ถ้วย' },
+    { name: 'แป้งข้าวโพด', amount: '1 ช้อนโต๊ะ' },
+    { name: 'ผงซินนามอน (อบเชยป่น)', amount: '1 ช้อนชา' },
+    { name: 'น้ำมะนาว', amount: '1 ช้อนโต๊ะ' },
+    { name: 'เนยจืด', amount: '1 ช้อนโต๊ะ' },
+    { name: 'ไข่ไก่ (สำหรับทาหน้า)', amount: '1 ฟอง' },
   ];
 
   const steps = [
     { 
       number: 1, 
-      text: 'บดกล้วย พอหยาบๆ'
+      text: 'วอร์มเตาอบที่ 180 องศาเซลเซียส'
     },
     { 
       number: 2, 
-      text: 'ใส่แป้ง แป้งข้าวจ้าว + แป้งมัน + แป้งท้าวยายม่อม + แป้งข้าวโพด ผสมให้เข้ากันอย่างดี'
+      text: 'ทำไส้: ในชามผสม ใส่แอปเปิ้ลหั่นเต๋า, น้ำตาล, แป้งข้าวโพด, ผงซินนามอน และน้ำมะนาว คลุกเคล้าให้เข้ากัน'
     },
     { 
       number: 3, 
-      text: 'นำอ่างผสมอีกใบ เทกะทิ + น้ำตาลมะพร้าว + เกลือ ผสมให้ทุกอย่างละลายดี'
+      text: 'นำแป้งพายแผ่นที่ 1 (คลายเย็นแล้ว) กรุลงในพิมพ์พาย'
     },
     { 
       number: 4, 
-      text: 'เทกลับมาผสมกับเนื้อกล้วย คนให้เข้ากันดี'
+      text: 'เทส่วนผสมไส้แอปเปิ้ลลงไป เกลี่ยให้ทั่ว วางเนยจืดหั่นเต๋าเล็กๆ กระจายบนหน้าไส้'
     },
     { 
       number: 5, 
-      text: 'เทใส่แม่พิมพ์ นำไปนึ่งจนสุก 10-15 นาที'
+      text: 'นำแป้งพายแผ่นที่ 2 มาปิดด้านบน (หรือตัดเป็นเส้นๆ สานกันเป็นลายตาราง)'
     },
     { 
       number: 6, 
-      text: 'ทำกะทิแต่งหน้าขนม นำกะทิ + น้ำตาลทราย + เกลือ + แป้งถั่วเขียว + แป้งข้าวจ้าว (คนให้เข้าก่อนตั้งไฟอ่อนๆ)',
-      tip: 'เคล็ดลับ: เคี่ยวจนข้น ตั้งยอด'
+      text: 'บีบขอบแป้งพายให้ติดกันแน่น และใช้ส้อมจิ้มหน้าพาย (หรือกรีดเล็กน้อย) เพื่อให้ไอน้ำระบาย'
     },
     { 
       number: 7, 
-      text: 'นำแป้งที่อุ่นแล้ว ใส่ถุงบีบ'
+      text: 'ตีไข่ไก่ให้เข้ากัน ใช้แปรงทาลงบนหน้าพายให้ทั่ว'
     },
     { 
       number: 8, 
-      text: 'บีบตามชอบ หรือตามหัวบีบที่มี'
+      text: 'นำเข้าเตาอบ 40-50 นาที หรือจนกระทั่งหน้าพายเป็นสีเหลืองทองสวย และไส้เดือดปุดๆ'
     },
     { 
       number: 9, 
-      text: 'เสร็จแล้วจัดเสริฟได้เลย'
+      text: 'นำออกจากเตา พักให้เย็นลงเล็กน้อยก่อนตัดเสิร์ฟ'
     },
   ];
 
@@ -80,15 +71,15 @@ const BananaCake = () => {
         <View style={styles.heroCard}>
           <Image
             source={{
-              uri: 'https://img.wongnai.com/p/1968x0/2018/11/09/cef2735066204e19aa7dae9af56c7081.jpg',
+              uri: 'https://img-global.cpcdn.com/steps/207c7f3a8d28c580/320x256cq80/%E0%B8%A7%E0%B8%98%E0%B8%97%E0%B8%B3-%E0%B8%AA%E0%B8%95%E0%B8%A3-%E0%B9%82%E0%B8%AE%E0%B8%A1%E0%B9%80%E0%B8%A1%E0%B8%94%E0%B8%9E%E0%B8%B2%E0%B8%A2%E0%B9%81%E0%B8%AD%E0%B8%9B%E0%B9%80%E0%B8%9B%E0%B8%A5-homemade-apple-pie-from-scratch-9-%E0%B8%A3%E0%B8%9B.webp',
             }}
             style={styles.image}
           />
           <View style={styles.heroContent}>
-            <Text style={styles.title}>ขนมกล้วยกะทิ</Text>
-            <View style={styles.tasteTag}>
-              <MaterialCommunityIcons name="food" size={16} color="#FF9800" />
-              <Text style={styles.tasteText}>หวานหอมจากกล้วยและกะทิ</Text>
+            <Text style={styles.title}>พายแอปเปิ้ล (Apple Pie)</Text>
+            <View style={[styles.tasteTag, { backgroundColor: '#FFF3E0' }]}>
+              <MaterialCommunityIcons name="chart-pie" size={16} color="#E65100" />
+              <Text style={[styles.tasteText, { color: '#E65100' }]}>หอมซินนามอน ไส้ฉ่ำ</Text>
             </View>
           </View>
         </View>
@@ -97,37 +88,35 @@ const BananaCake = () => {
         <View style={styles.timeCard}>
           <View style={styles.timeItem}>
             <MaterialCommunityIcons name="clock-outline" size={20} color="#4CAF50" />
-            <Text style={styles.timeLabel}>เวลาเตรียมส่วนผสม</Text>
-            <Text style={styles.timeValue}>15 นาที</Text>
+            <Text style={styles.timeLabel}>เวลาเตรียม</Text>
+            <Text style={styles.timeValue}>20 นาที</Text>
           </View>
           <View style={styles.timeSeparator} />
           <View style={styles.timeItem}>
             <MaterialCommunityIcons name="chef-hat" size={20} color="#FF9800" />
-            <Text style={styles.timeLabel}>เวลาปรุงอาหาร</Text>
-            <Text style={styles.timeValue}>40 นาที</Text>
+            <Text style={styles.timeLabel}>เวลาปรุง</Text>
+            <Text style={styles.timeValue}>45 นาที</Text>
           </View>
           <View style={styles.timeSeparator} />
           <View style={styles.timeItem}>
             <MaterialCommunityIcons name="scale" size={20} color="#2196F3" />
             <Text style={styles.timeLabel}>สำหรับ</Text>
-            <Text style={styles.timeValue}>1 ปอนด์</Text>
+            <Text style={styles.timeValue}>1 ชิ้น (9 นิ้ว)</Text>
           </View>
         </View>
 
         {/* Main Ingredients Section */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name={("fruit-banana" as any)} size={24} color="#FFD700" />
+            <MaterialCommunityIcons name={("food-apple" as any)} size={24} color="#F44336" />
             <View>
-              <Text style={styles.sectionTitle}>ส่วนผสมหลัก</Text>
-              <Text style={styles.sectionSubtitle}>สำหรับตัวขนม</Text>
+              <Text style={styles.sectionTitle}>ส่วนผสมทั้งหมด</Text>
             </View>
           </View>
-          
           <View style={styles.ingredientsList}>
             {mainIngredients.map((item, index) => (
               <View key={index} style={styles.ingredientItem}>
-                <View style={[styles.ingredientDot, { backgroundColor: '#FF9800' }]} />
+                <View style={[styles.ingredientDot, { backgroundColor: '#F44336' }]} />
                 <View style={styles.ingredientText}>
                   <Text style={styles.ingredientName}>{item.name}</Text>
                   <Text style={styles.ingredientAmount}>{item.amount}</Text>
@@ -136,37 +125,13 @@ const BananaCake = () => {
             ))}
           </View>
         </View>
-
-        {/* Topping Ingredients Section */}
-        <View style={styles.sectionCard}>
-          <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="cup" size={24} color="#4CAF50" />
-            <View>
-              <Text style={styles.sectionTitle}>กะทิแต่งหน้า</Text>
-              <Text style={styles.sectionSubtitle}>ส่วนผสมสำหรับท็อปปิ้ง</Text>
-            </View>
-          </View>
-          
-          <View style={styles.ingredientsList}>
-            {toppingIngredients.map((item, index) => (
-              <View key={index} style={styles.ingredientItem}>
-                <View style={[styles.ingredientDot, { backgroundColor: '#4CAF50' }]} />
-                <View style={styles.ingredientText}>
-                  <Text style={styles.ingredientName}>{item.name}</Text>
-                  <Text style={styles.ingredientAmount}>{item.amount}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
-
+        
         {/* Instructions Section */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
             <MaterialCommunityIcons name="chef-hat" size={24} color="#FF6B6B" />
             <Text style={styles.sectionTitle}>วิธีทำ</Text>
           </View>
-          
           <View style={styles.stepsList}>
             {steps.map((step, index) => (
               <View key={index} style={styles.stepItem}>
@@ -177,18 +142,12 @@ const BananaCake = () => {
                 </View>
                 <View style={styles.stepContent}>
                   <Text style={styles.stepText}>{step.text}</Text>
-                  {step.tip && (
-                    <View style={styles.tipContainer}>
-                      <MaterialCommunityIcons name="lightbulb-on" size={16} color="#FF9800" />
-                      <Text style={styles.tipText}>{step.tip}</Text>
-                    </View>
-                  )}
                 </View>
               </View>
             ))}
           </View>
         </View>
-
+        
         {/* Tips Section */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
@@ -196,42 +155,19 @@ const BananaCake = () => {
             <Text style={styles.sectionTitle}>เคล็ดลับสำคัญ</Text>
           </View>
           <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name={("fruit-banana" as any)} size={16} color="#FF9800" />
-            <Text style={styles.tipText}>ใช้กล้วยน้ำว้าสุกจะได้รสหวานหอมธรรมชาติ</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name={("mixer" as any)} size={16} color="#4CAF50" />
-            <Text style={styles.tipText}>ผสมแป้งให้เข้ากันดีก่อนใส่ส่วนผสมอื่น</Text>
+            <MaterialCommunityIcons name={("ice-cream" as any)} size={16} color="#2196F3" />
+            <Text style={styles.tipText}>เสิร์ฟตอนอุ่นๆ คู่กับไอศกรีมวานิลลา จะอร่อยมาก (เรียกว่า "Pie à la mode")</Text>
           </View>
           <View style={styles.tipContainer}>
             <MaterialCommunityIcons name="fire" size={16} color="#FF6B6B" />
-            <Text style={styles.tipText}>เคี่ยวกะทิแต่งหน้าไฟอ่อนจนข้นได้ที่</Text>
-          </View>
-        </View>
-
-        {/* Serving Suggestion */}
-        <View style={styles.sectionCard}>
-          <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="food" size={24} color="#9C27B0" />
-            <Text style={styles.sectionTitle}>คำแนะนำในการเสิร์ฟ</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>เสิร์ฟร้อนหรือเย็นตามชอบ</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>บีบหน้าขนมให้สวยงามตามแบบที่ต้องการ</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>สามารถปรับความหวานได้ตามความชอบ</Text>
+            <Text style={styles.tipText}>หากอบแล้วหน้าพายเริ่มสีเข้มเร็วเกินไป ให้ใช้ฟอยล์คลุมหน้าพายไว้ แล้วอบต่อจนไส้สุก</Text>
           </View>
         </View>
       </ScrollView>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -382,33 +318,59 @@ const styles = StyleSheet.create({
   stepItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 20,
+    marginBottom: 25,
   },
   stepNumberContainer: {
     marginRight: 12,
   },
   stepNumber: {
-    width: 28,
+    width: 70,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#FF9800',
+    backgroundColor: '#8B4513',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 2,
   },
   stepNumberText: {
     color: '#fff',
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
   },
   stepContent: {
     flex: 1,
   },
+  stepTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#8B4513',
+    marginBottom: 6,
+  },
   stepText: {
     fontSize: 14,
     color: '#333',
     lineHeight: 20,
-    marginBottom: 4,
+    marginBottom: 8,
+  },
+  subStepItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 6,
+    marginLeft: 8,
+  },
+  subStepDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#666',
+    marginRight: 8,
+    marginTop: 8,
+  },
+  subStepText: {
+    fontSize: 13,
+    color: '#555',
+    lineHeight: 18,
+    flex: 1,
   },
   tipContainer: {
     flexDirection: 'row',
@@ -427,4 +389,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BananaCake;
+
+export default ApplePie;

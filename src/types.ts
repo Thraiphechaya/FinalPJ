@@ -100,9 +100,66 @@ export type RootStackParamList = {
   StrawberryIceCream: undefined;
   FreshStrawberryMilk: undefined;
   SmoothieStrawberry: undefined;
+
+  //--Banana Menu--
   BananaCake: undefined;
   CaramelBananaToast: undefined;
   ButteredBanana: undefined;
+
+   //--Orange Menu--
+  JuiceOrange: undefined;
+  JellyOrange: undefined;
+  SomChengLoiKaew: undefined;
+
+  //--Apple Menu--
+  AppleSalad: undefined;
+  AppleTart: undefined;
+  ApplePie: undefined;
+
+  //--Papaya Menu
+  PapayaSmootie: undefined;
+  FriedPapaya: undefined;
+  StirFriedPapayaWithEgg:undefined;
+
+  //--Grape Menu
+  KyohoGrape:undefined;
+  TunaGrape:undefined;
+  BananaGrapeCake:undefined;
+
+  //Avocado Menu
+  BakedAvocadoFries:undefined;
+  AvocadoEggToast:undefined;
+  AvocadoMilk:undefined;
+
+  //Cherry Menu
+  CherryJelly: undefined;
+  CherrySmoothie: undefined;
+  CherryTrifle: undefined;
+
+  //Mango Menu
+  MangoPuddingMousse: undefined;
+  DriedMangoPaste: undefined;
+  MangoYogurtSmoothie: undefined;
+
+  //Tomato 
+  Shakshuka: undefined;
+  TomatoBruschetta: undefined;
+  TomatoSoup: undefined;
+
+  //Cabbage
+  CabbagePorkSoup: undefined;
+  JadeDragonSteamedEgg: undefined;
+  MicrowaveCabbageFishSauce: undefined;
+
+  //Brocoli
+
+
+
+
+
+
+
+  
 };
 
 // Type helpers

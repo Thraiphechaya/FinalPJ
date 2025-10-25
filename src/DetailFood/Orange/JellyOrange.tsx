@@ -3,60 +3,63 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RootStackParamList } from '../../types';
+import { RootStackParamList } from '../../types'; // สมมติว่า path นี้ถูกต้อง
 
-type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaScreen'>;
+type OrangeScreenNav = NativeStackNavigationProp<RootStackParamList, 'OrangeScreen'>; 
 
-const CaramelBananaToast = () => {
-  const navigation = useNavigation<BananaScreenNav>();
+// เปลี่ยนชื่อ Component ให้ตรงกับสูตร
+const JellyOrange = () => { 
+  const navigation = useNavigation<OrangeScreenNav>();
 
-  const toastIngredients = [
-    { name: 'เอโร่ ขนมปังคาราเมลโทสต์', amount: '1 ชิ้น' },
-    { name: 'ซอสช็อกโกแลต', amount: 'สำหรับตกแต่ง' },
-    { name: 'กล้วยหอมสุก', amount: 'สำหรับตกแต่ง' },
-    { name: 'วิปปิงครีม', amount: 'สำหรับตกแต่ง' },
-    { name: 'ผงโกโก้', amount: 'สำหรับตกแต่ง' },
-    { name: 'โรสแมรี', amount: 'สำหรับตกแต่ง' },
+  // แบ่งส่วนผสมตามสูตร Wongnai (ส่วนส้ม และ ส่วนวุ้น)
+  const mainIngredients = [
+    { name: 'ส้ม (เช่น ส้มเอฮิเมะ หรือ ส้มแมนดาริน)', amount: '4-5 ลูก' },
   ];
 
-  const caramelSauceIngredients = [
-    { name: 'น้ำตาลทรายขาว', amount: '265 กรัม' },
-    { name: 'น้ำเปล่า', amount: '30 กรัม' },
-    { name: 'วิปปิงครีม', amount: '160 กรัม' },
-    { name: 'เนย', amount: '80 กรัม' },
-    { name: 'เกลือ', amount: '½ ช้อนชา' },
+  const jellyIngredients = [
+    { name: 'ผงวุ้น', amount: '1 ช้อนโต๊ะ' },
+    { name: 'น้ำสะอาด', amount: '250 ml (สำหรับแช่วุ้น)' },
+    { name: 'นมเปรี้ยว (เช่น ยาคูลท์)', amount: '300-400 ml' },
+    { name: 'น้ำตาลทราย', amount: '50 กรัม (ปรับตามชอบ)' },
   ];
 
   const steps = [
     { 
       number: 1, 
-      title: 'ทำซอสคาราเมล',
-      text: 'ใส่น้ำตาลและน้ำเปล่าลงในหม้อ ใช้ไฟอ่อน ๆ ค่อย ๆ ให้น้ำตาลละลาย และเป็นสีที่ต้องการ',
-      subSteps: [
-        'จากนั้นนำวิปปิงครีมอุณหภูมิห้อง เทใส่ลงไปคนให้เข้ากัน',
-        'เมื่อเข้ากันดีแล้ว ตามด้วยเกลือและเนยเป็นลำดับสุดท้าย'
-      ]
+      text: 'ล้างส้ม ซับให้แห้ง แล้วปอกเปลือกส้ม (รวมถึงเยื่อสีขาว)',
+      tip: 'เคล็ดลับ: นำส้มไปต้มในน้ำเดือดจัด 1.30 นาที แล้วแช่น้ำเย็นทันที จะช่วยให้ลอกเยื่อสีขาวออกได้ง่ายขึ้น'
     },
     { 
       number: 2, 
-      title: 'ย่างขนมปัง',
-      text: 'นำ เอโร่ ขนมปังคาราเมลโทสต์ ออกมาพักในอุณหภูมิห้อง 30 นาที',
-      subSteps: [
-        'จากนั้นนำไปย่างในกระทะด้วยไฟอ่อน ๆ ให้ขึ้นสีทั้งสองด้าน',
-        'ด้านละประมาณ 3 นาที หรือจนได้สีที่สวยงาม',
-        'เตรียมวิปปิงครีมไว้โดยการตีให้ขึ้นฟู จากนั้นใส่ถุงบีบแล้วพักไว้'
-      ]
+      text: 'จัดเรียงส้มที่ปอกแล้วลงในภาชนะหรือแม่พิมพ์ที่ต้องการ (อาจใช้ไม้เสียบช่วยยึด)'
     },
     { 
       number: 3, 
-      title: 'ประกอบร่าง',
-      text: 'ทา เอโร่ ขนมปังคาราเมลโทสต์ ที่ย่างไว้ด้วยซอสช็อกโกแลต',
-      subSteps: [
-        'จากนั้นตามด้วยวิปครีมที่ตีไว้',
-        'เรียงกล้วยหั่นแว่นลงไปให้สวยงาม',
-        'ราดด้วยซอสคาราเมลที่ทำไว้',
-        'โรยด้วยผงโกโก้ และตกแต่งด้วยโรสแมรีให้สวยงาม'
-      ]
+      text: 'แช่ผงวุ้นในน้ำสะอาด 250 ml พักไว้ประมาณ 10 นาที ให้ผงวุ้นอิ่มตัว'
+    },
+    { 
+      number: 4, 
+      text: 'นำหม้อวุ้นที่แช่ไว้ไปตั้งไฟกลาง เติมน้ำตาลทราย'
+    },
+    { 
+      number: 5, 
+      text: 'คนไปเรื่อยๆ จนผงวุ้นและน้ำตาลละลายจนหมด (น้ำจะเริ่มใสและข้นเล็กน้อย) ปิดไฟ'
+    },
+    { 
+      number: 6, 
+      text: 'ยกลงจากเตา ค่อยๆ เทนมเปรี้ยว (ที่อุณหภูมิห้อง) ลงในหม้อวุ้น คนให้เข้ากันอย่างรวดเร็ว'
+    },
+    { 
+      number: 7, 
+      text: 'เทส่วนผสมวุ้นนมเปรี้ยว ลงในแม่พิมพ์ที่มีส้มรออยู่ (เทตอนที่วุ้นยังอุ่นๆ)'
+    },
+    { 
+      number: 8, 
+      text: 'นำไปแช่ตู้เย็น 1-2 ชั่วโมง หรือจนกว่าวุ้นจะเซ็ตตัวดี'
+    },
+    { 
+      number: 9, 
+      text: 'เมื่อเซ็ตตัวแล้ว นำออกจากพิมพ์ ตัดเป็นชิ้นๆ พร้อมเสิร์ฟ'
     },
   ];
 
@@ -71,15 +74,16 @@ const CaramelBananaToast = () => {
         <View style={styles.heroCard}>
           <Image
             source={{
-              uri: 'https://img.wongnai.com/p/800x0/2024/03/19/4948f9d9d0c24ff6a6a0c0f279c9e0aa.jpg',
+              // รูปจากสูตร Wongnai
+              uri: 'https://img.wongnai.com/p/1600x0/2024/12/09/1d99a3a263bb49edb234b902e7c45401.jpg',
             }}
             style={styles.image}
           />
           <View style={styles.heroContent}>
-            <Text style={styles.title}>คาราเมลบานอฟฟีโทสต์</Text>
+            <Text style={styles.title}>วุ้นส้มนมเปรี้ยว</Text>
             <View style={styles.tasteTag}>
-              <MaterialCommunityIcons name={("toast" as any)} size={16} color="#FF9800" />
-              <Text style={styles.tasteText}>ขนมปังคาราเมลกับกล้วยหอมและซอสคาราเมล</Text>
+              <MaterialCommunityIcons name="food-variant" size={16} color="#FF6B6B" />
+              <Text style={styles.tasteText}>เปรี้ยวอมหวาน หอมนมเปรี้ยว</Text>
             </View>
           </View>
         </View>
@@ -88,37 +92,37 @@ const CaramelBananaToast = () => {
         <View style={styles.timeCard}>
           <View style={styles.timeItem}>
             <MaterialCommunityIcons name="clock-outline" size={20} color="#4CAF50" />
-            <Text style={styles.timeLabel}>เวลาเตรียม</Text>
-            <Text style={styles.timeValue}>30 นาที</Text>
+            <Text style={styles.timeLabel}>เวลาเตรียม (ปอกส้ม)</Text>
+            <Text style={styles.timeValue}>20 นาที</Text>
           </View>
           <View style={styles.timeSeparator} />
           <View style={styles.timeItem}>
             <MaterialCommunityIcons name="chef-hat" size={20} color="#FF9800" />
-            <Text style={styles.timeLabel}>เวลาปรุง</Text>
+            <Text style={styles.timeLabel}>เวลาทำ (ไม่รวมแช่)</Text>
             <Text style={styles.timeValue}>15 นาที</Text>
           </View>
           <View style={styles.timeSeparator} />
           <View style={styles.timeItem}>
-            <MaterialCommunityIcons name="account" size={20} color="#2196F3" />
+            <MaterialCommunityIcons name="scale" size={20} color="#2196F3" />
             <Text style={styles.timeLabel}>สำหรับ</Text>
-            <Text style={styles.timeValue}>1 ที่</Text>
+            <Text style={styles.timeValue}>1 พิมพ์</Text>
           </View>
         </View>
 
-        {/* Toast Ingredients Section */}
+        {/* Main Ingredients Section (ส้ม) */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name={("toast" as any)} size={24} color="#8B4513" />
+            <MaterialCommunityIcons name={("fruit-citrus" as any)} size={24} color="#FF9800" />
             <View>
-              <Text style={styles.sectionTitle}>วัตถุดิบบานอฟฟีโทสต์</Text>
-              <Text style={styles.sectionSubtitle}>ส่วนประกอบหลัก</Text>
+              <Text style={styles.sectionTitle}>ส่วนผสมส้ม</Text>
+              <Text style={styles.sectionSubtitle}>ส่วนเนื้อผลไม้</Text>
             </View>
           </View>
           
           <View style={styles.ingredientsList}>
-            {toastIngredients.map((item, index) => (
+            {mainIngredients.map((item, index) => (
               <View key={index} style={styles.ingredientItem}>
-                <View style={[styles.ingredientDot, { backgroundColor: '#8B4513' }]} />
+                <View style={[styles.ingredientDot, { backgroundColor: '#FF9800' }]} />
                 <View style={styles.ingredientText}>
                   <Text style={styles.ingredientName}>{item.name}</Text>
                   <Text style={styles.ingredientAmount}>{item.amount}</Text>
@@ -128,20 +132,22 @@ const CaramelBananaToast = () => {
           </View>
         </View>
 
-        {/* Caramel Sauce Ingredients Section */}
+        {/* Topping Ingredients Section (วุ้นนมเปรี้ยว) */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name={("saucepan" as any)} size={24} color="#D2691E" />
+            {/* เปลี่ยนไอคอนและชื่อส่วน */}
+            <MaterialCommunityIcons name="cup" size={24} color="#2196F3" />
             <View>
-              <Text style={styles.sectionTitle}>ซอสคาราเมล</Text>
-              <Text style={styles.sectionSubtitle}>ส่วนผสมซอส</Text>
+              <Text style={styles.sectionTitle}>ส่วนผสมวุ้นนมเปรี้ยว</Text>
+              <Text style={styles.sectionSubtitle}>ส่วนของวุ้น</Text>
             </View>
           </View>
           
           <View style={styles.ingredientsList}>
-            {caramelSauceIngredients.map((item, index) => (
+            {jellyIngredients.map((item, index) => (
               <View key={index} style={styles.ingredientItem}>
-                <View style={[styles.ingredientDot, { backgroundColor: '#D2691E' }]} />
+                {/* เปลี่ยนสี Dot */}
+                <View style={[styles.ingredientDot, { backgroundColor: '#2196F3' }]} />
                 <View style={styles.ingredientText}>
                   <Text style={styles.ingredientName}>{item.name}</Text>
                   <Text style={styles.ingredientAmount}>{item.amount}</Text>
@@ -163,19 +169,17 @@ const CaramelBananaToast = () => {
               <View key={index} style={styles.stepItem}>
                 <View style={styles.stepNumberContainer}>
                   <View style={styles.stepNumber}>
-                    <Text style={styles.stepNumberText}>STEP {step.number}</Text>
+                    <Text style={styles.stepNumberText}>{step.number}</Text>
                   </View>
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>{step.title}</Text>
                   <Text style={styles.stepText}>{step.text}</Text>
-                  
-                  {step.subSteps && step.subSteps.map((subStep, subIndex) => (
-                    <View key={subIndex} style={styles.subStepItem}>
-                      <View style={styles.subStepDot} />
-                      <Text style={styles.subStepText}>{subStep}</Text>
+                  {step.tip && (
+                    <View style={styles.tipContainer}>
+                      <MaterialCommunityIcons name="lightbulb-on" size={16} color="#FF9800" />
+                      <Text style={styles.tipText}>{step.tip}</Text>
                     </View>
-                  ))}
+                  )}
                 </View>
               </View>
             ))}
@@ -189,16 +193,16 @@ const CaramelBananaToast = () => {
             <Text style={styles.sectionTitle}>เคล็ดลับสำคัญ</Text>
           </View>
           <View style={styles.tipContainer}>
+            <MaterialCommunityIcons name={("fruit-citrus" as any)} size={16} color="#FF9800" />
+            <Text style={styles.tipText}>การต้มส้มก่อนปอก จะช่วยให้ลอกเยื่อขาวๆ ที่ขม ออกได้ง่ายขึ้นมาก</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <MaterialCommunityIcons name={("water-check" as any)} size={16} color="#2196F3" />
+            <Text style={styles.tipText}>ต้องแช่ผงวุ้นในน้ำก่อน 10 นาที เพื่อให้วุ้นอิ่มน้ำและเซ็ตตัวได้ดี</Text>
+          </View>
+          <View style={styles.tipContainer}>
             <MaterialCommunityIcons name="fire" size={16} color="#FF6B6B" />
-            <Text style={styles.tipText}>ใช้ไฟอ่อนในการทำซอสคาราเมลเพื่อป้องกันไหม้</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="thermometer" size={16} color="#4CAF50" />
-            <Text style={styles.tipText}>ใช้วิปปิงครีมอุณหภูมิห้องเพื่อผสมซอสได้ง่าย</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name={("fruit-banana" as any)} size={16} color="#FFD700" />
-            <Text style={styles.tipText}>เลือกกล้วยหอมสุกพอดีสำหรับรสชาติที่ดีที่สุด</Text>
+            <Text style={styles.tipText}>อย่าเทนมเปรี้ยวเย็นๆ ลงในวุ้นที่ร้อนจัด (วุ้นอาจเป็นลิ่ม) ควรอุ่นวุ้นเล็กน้อย และใช้นมเปรี้ยวอุณหภูมิห้อง</Text>
           </View>
         </View>
 
@@ -210,15 +214,11 @@ const CaramelBananaToast = () => {
           </View>
           <View style={styles.tipContainer}>
             <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>เสิร์ฟร้อน ๆ จะได้รสชาติที่ดีที่สุด</Text>
+            <Text style={styles.tipText}>เสิร์ฟแบบเย็นๆ จะสดชื่นมาก</Text>
           </View>
           <View style={styles.tipContainer}>
             <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>ตกแต่งด้วยโรสแมรีให้สวยงามน่าทาน</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>สามารถเพิ่มไอศครีมวานิลลาได้ตามชอบ</Text>
+            <Text style={styles.tipText}>ตัดเป็นชิ้นสี่เหลี่ยมพอดีคำ ให้เห็นไส้ส้มด้านใน</Text>
           </View>
         </View>
       </ScrollView>
@@ -226,10 +226,11 @@ const CaramelBananaToast = () => {
   );
 };
 
+// ส่วนของ Styles (ใช้ของเดิมทั้งหมด)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#A4E4A0',
+    backgroundColor: '#A4E4A0', // สีพื้นหลัง (จากโค้ดเดิม)
   },
   scrollView: {
     flex: 1,
@@ -375,59 +376,33 @@ const styles = StyleSheet.create({
   stepItem: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 25,
+    marginBottom: 20,
   },
   stepNumberContainer: {
     marginRight: 12,
   },
   stepNumber: {
-    width: 70,
+    width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#8B4513',
+    backgroundColor: '#FF9800',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 2,
   },
   stepNumberText: {
     color: '#fff',
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: 'bold',
   },
   stepContent: {
     flex: 1,
   },
-  stepTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#8B4513',
-    marginBottom: 6,
-  },
   stepText: {
     fontSize: 14,
     color: '#333',
     lineHeight: 20,
-    marginBottom: 8,
-  },
-  subStepItem: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 6,
-    marginLeft: 8,
-  },
-  subStepDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#666',
-    marginRight: 8,
-    marginTop: 8,
-  },
-  subStepText: {
-    fontSize: 13,
-    color: '#555',
-    lineHeight: 18,
-    flex: 1,
+    marginBottom: 4,
   },
   tipContainer: {
     flexDirection: 'row',
@@ -446,4 +421,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CaramelBananaToast;
+export default JellyOrange;

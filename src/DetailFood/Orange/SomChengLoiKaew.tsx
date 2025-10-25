@@ -3,69 +3,47 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { RootStackParamList } from '../../types';
+import { RootStackParamList } from '../../types'; 
 
-type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaScreen'>;
+type OrangeScreenNav = NativeStackNavigationProp<RootStackParamList, 'OrangeScreen'>; 
 
-const BananaCake = () => {
-  const navigation = useNavigation<BananaScreenNav>();
 
+const SomChengLoiKaew = () => { 
+  const navigation = useNavigation<OrangeScreenNav>();
+
+ 
   const mainIngredients = [
-    { name: 'กล้วยน้ำว้าสุก', amount: '6 ลูก' },
-    { name: 'กะทิ', amount: '300 ml' },
-    { name: 'แป้งข้าวจ้าว', amount: '60 กรัม' },
-    { name: 'แป้งข้าวโพด', amount: '15 กรัม' },
-    { name: 'แป้งมัน', amount: '15 กรัม' },
-    { name: 'แป้งท้าวยายม่อม', amount: '30 กรัม' },
-    { name: 'น้ำตาลมะพร้าว', amount: '120 กรัม' },
-    { name: 'น้ำตาลทราย', amount: '30 กรัม' },
-  ];
-
-  const toppingIngredients = [
-    { name: 'กะทิ', amount: '250 ml' },
-    { name: 'แป้งถั่วเขียว', amount: '2 ช้อนชา' },
-    { name: 'แป้งข้าวจ้าว', amount: '1 ช้อนชา' },
+    { name: 'ส้มเช้ง', amount: '2-3 ลูก' },
+    { name: 'น้ำตาลทราย (หรือน้ำลอยดอกมะลิ)', amount: '3 ช้อนโต๊ะ' },
+    { name: 'น้ำเปล่า', amount: 'สำหรับทำน้ำเชื่อม (พอท่วมส้ม)' },
     { name: 'เกลือ', amount: '1/2 ช้อนชา' },
-    { name: 'น้ำตาลทราย', amount: '1 ช้อนโต๊ะ' },
   ];
 
+ 
   const steps = [
     { 
       number: 1, 
-      text: 'บดกล้วย พอหยาบๆ'
+      text: 'ปอกเปลือกส้มเช้ง (ลอกเยื่อขาวออกให้หมด) หั่นเป็นชิ้นพอดีคำ'
     },
     { 
       number: 2, 
-      text: 'ใส่แป้ง แป้งข้าวจ้าว + แป้งมัน + แป้งท้าวยายม่อม + แป้งข้าวโพด ผสมให้เข้ากันอย่างดี'
+      text: 'ตั้งหม้อต้มน้ำเปล่า (ปริมาณพอท่วมส้ม)'
     },
     { 
       number: 3, 
-      text: 'นำอ่างผสมอีกใบ เทกะทิ + น้ำตาลมะพร้าว + เกลือ ผสมให้ทุกอย่างละลายดี'
+      text: 'ใส่น้ำตาลทรายลงไปเคี่ยวให้ละลาย'
     },
     { 
       number: 4, 
-      text: 'เทกลับมาผสมกับเนื้อกล้วย คนให้เข้ากันดี'
+      text: 'จากนั้นใส่ส้มเช้งที่หั่นเตรียมไว้ลงไป'
     },
     { 
       number: 5, 
-      text: 'เทใส่แม่พิมพ์ นำไปนึ่งจนสุก 10-15 นาที'
+      text: 'ใส่เกลือลงไปเล็กน้อย คนให้เข้ากัน ปิดไฟ'
     },
     { 
       number: 6, 
-      text: 'ทำกะทิแต่งหน้าขนม นำกะทิ + น้ำตาลทราย + เกลือ + แป้งถั่วเขียว + แป้งข้าวจ้าว (คนให้เข้าก่อนตั้งไฟอ่อนๆ)',
-      tip: 'เคล็ดลับ: เคี่ยวจนข้น ตั้งยอด'
-    },
-    { 
-      number: 7, 
-      text: 'นำแป้งที่อุ่นแล้ว ใส่ถุงบีบ'
-    },
-    { 
-      number: 8, 
-      text: 'บีบตามชอบ หรือตามหัวบีบที่มี'
-    },
-    { 
-      number: 9, 
-      text: 'เสร็จแล้วจัดเสริฟได้เลย'
+      text: 'ตักเสิร์ฟใส่ชาม หรือพักให้เย็นแล้วนำไปแช่ตู้เย็นก่อนเสิร์ฟ'
     },
   ];
 
@@ -80,15 +58,17 @@ const BananaCake = () => {
         <View style={styles.heroCard}>
           <Image
             source={{
-              uri: 'https://img.wongnai.com/p/1968x0/2018/11/09/cef2735066204e19aa7dae9af56c7081.jpg',
+              // รูปจากสูตร Wongnai (ใช้ ID จาก URL)
+              uri: 'https://www.lemon8-app.com/seo/image?item_id=7168498973806871042&index=1&sign=a71b8453d725ea39c3ab089fa9b2986d',
             }}
             style={styles.image}
           />
           <View style={styles.heroContent}>
-            <Text style={styles.title}>ขนมกล้วยกะทิ</Text>
+            <Text style={styles.title}>ส้มเช้งลอยแก้ว</Text>
             <View style={styles.tasteTag}>
-              <MaterialCommunityIcons name="food" size={16} color="#FF9800" />
-              <Text style={styles.tasteText}>หวานหอมจากกล้วยและกะทิ</Text>
+              {/* เปลี่ยนไอคอนและข้อความ */}
+              <MaterialCommunityIcons name="snowflake" size={16} color="#2196F3" />
+              <Text style={[styles.tasteText, { color: '#2196F3' }]}>เปรี้ยวอมหวาน หวานเย็นชื่นใจ</Text>
             </View>
           </View>
         </View>
@@ -104,23 +84,23 @@ const BananaCake = () => {
           <View style={styles.timeItem}>
             <MaterialCommunityIcons name="chef-hat" size={20} color="#FF9800" />
             <Text style={styles.timeLabel}>เวลาปรุงอาหาร</Text>
-            <Text style={styles.timeValue}>40 นาที</Text>
+            <Text style={styles.timeValue}>15 นาที</Text>
           </View>
           <View style={styles.timeSeparator} />
           <View style={styles.timeItem}>
             <MaterialCommunityIcons name="scale" size={20} color="#2196F3" />
             <Text style={styles.timeLabel}>สำหรับ</Text>
-            <Text style={styles.timeValue}>1 ปอนด์</Text>
+            <Text style={styles.timeValue}>1-2 ที่</Text>
           </View>
         </View>
 
         {/* Main Ingredients Section */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name={("fruit-banana" as any)} size={24} color="#FFD700" />
+            <MaterialCommunityIcons name={("fruit-citrus" as any)} size={24} color="#FF9800" />
             <View>
-              <Text style={styles.sectionTitle}>ส่วนผสมหลัก</Text>
-              <Text style={styles.sectionSubtitle}>สำหรับตัวขนม</Text>
+              <Text style={styles.sectionTitle}>ส่วนผสมทั้งหมด</Text>
+              {/* ลบ Subtitle */}
             </View>
           </View>
           
@@ -137,28 +117,7 @@ const BananaCake = () => {
           </View>
         </View>
 
-        {/* Topping Ingredients Section */}
-        <View style={styles.sectionCard}>
-          <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="cup" size={24} color="#4CAF50" />
-            <View>
-              <Text style={styles.sectionTitle}>กะทิแต่งหน้า</Text>
-              <Text style={styles.sectionSubtitle}>ส่วนผสมสำหรับท็อปปิ้ง</Text>
-            </View>
-          </View>
-          
-          <View style={styles.ingredientsList}>
-            {toppingIngredients.map((item, index) => (
-              <View key={index} style={styles.ingredientItem}>
-                <View style={[styles.ingredientDot, { backgroundColor: '#4CAF50' }]} />
-                <View style={styles.ingredientText}>
-                  <Text style={styles.ingredientName}>{item.name}</Text>
-                  <Text style={styles.ingredientAmount}>{item.amount}</Text>
-                </View>
-              </View>
-            ))}
-          </View>
-        </View>
+       
 
         {/* Instructions Section */}
         <View style={styles.sectionCard}>
@@ -177,12 +136,6 @@ const BananaCake = () => {
                 </View>
                 <View style={styles.stepContent}>
                   <Text style={styles.stepText}>{step.text}</Text>
-                  {step.tip && (
-                    <View style={styles.tipContainer}>
-                      <MaterialCommunityIcons name="lightbulb-on" size={16} color="#FF9800" />
-                      <Text style={styles.tipText}>{step.tip}</Text>
-                    </View>
-                  )}
                 </View>
               </View>
             ))}
@@ -196,36 +149,16 @@ const BananaCake = () => {
             <Text style={styles.sectionTitle}>เคล็ดลับสำคัญ</Text>
           </View>
           <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name={("fruit-banana" as any)} size={16} color="#FF9800" />
-            <Text style={styles.tipText}>ใช้กล้วยน้ำว้าสุกจะได้รสหวานหอมธรรมชาติ</Text>
+            <MaterialCommunityIcons name="alert-circle-outline" size={16} color="#FF6B6B" />
+            <Text style={styles.tipText}>ต้องปอกเยื่อสีขาวของส้มเช้งออกให้หมด ไม่งั้นน้ำเชื่อมจะมีรสขม</Text>
           </View>
           <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name={("mixer" as any)} size={16} color="#4CAF50" />
-            <Text style={styles.tipText}>ผสมแป้งให้เข้ากันดีก่อนใส่ส่วนผสมอื่น</Text>
+            <MaterialCommunityIcons name={("flower-poppy" as any)} size={16} color="#E91E63" />
+            <Text style={styles.tipText}>หากใช้น้ำลอยดอกมะลิแทนน้ำตาลทราย จะช่วยเพิ่มกลิ่นหอม</Text>
           </View>
           <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="fire" size={16} color="#FF6B6B" />
-            <Text style={styles.tipText}>เคี่ยวกะทิแต่งหน้าไฟอ่อนจนข้นได้ที่</Text>
-          </View>
-        </View>
-
-        {/* Serving Suggestion */}
-        <View style={styles.sectionCard}>
-          <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="food" size={24} color="#9C27B0" />
-            <Text style={styles.sectionTitle}>คำแนะนำในการเสิร์ฟ</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>เสิร์ฟร้อนหรือเย็นตามชอบ</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>บีบหน้าขนมให้สวยงามตามแบบที่ต้องการ</Text>
-          </View>
-          <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="star" size={16} color="#FFD700" />
-            <Text style={styles.tipText}>สามารถปรับความหวานได้ตามความชอบ</Text>
+            <MaterialCommunityIcons name={("snowflake" as any)} size={16} color="#2196F3" />
+            <Text style={styles.tipText}>ยิ่งแช่เย็นยิ่งอร่อย เสิร์ฟพร้อมน้ำแข็งทุบจะสดชื่นมาก</Text>
           </View>
         </View>
       </ScrollView>
@@ -236,7 +169,7 @@ const BananaCake = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#A4E4A0',
+    backgroundColor: '#A4E4A0', 
   },
   scrollView: {
     flex: 1,
@@ -274,7 +207,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFF9F9',
+    backgroundColor: '#F3F9FF', // สีพื้นหลัง Tag
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
@@ -282,7 +215,7 @@ const styles = StyleSheet.create({
   },
   tasteText: {
     fontSize: 14,
-    color: '#FF6B6B',
+    color: '#2196F3', // สีข้อความ Tag
     marginLeft: 6,
     fontWeight: '500',
   },
@@ -344,7 +277,7 @@ const styles = StyleSheet.create({
     color: '#333',
     marginLeft: 8,
   },
-  sectionSubtitle: {
+  sectionSubtitle: { // (แม้จะไม่ได้ใช้ในหน้านี้ แต่คงไว้เผื่อสูตรอื่น)
     fontSize: 12,
     color: '#666',
     marginLeft: 8,
@@ -427,4 +360,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BananaCake;
+export default SomChengLoiKaew;
