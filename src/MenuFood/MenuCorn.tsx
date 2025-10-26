@@ -3,42 +3,40 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuCornNav = NativeStackNavigationProp<RootStackParamList, 'MenuCorn'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuCorn = () => {
+  const navigation = useNavigation<MenuCornNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
-      icon: 'bowl',
-      color: '#d91e1bff',
+      name: 'ข้าวโพดคลุกเนย',
+      image: 'https://www.channelj.co.th/wp-content/uploads/2021/11/%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B8%A7%E0%B9%82%E0%B8%9E%E0%B8%94%E0%B8%84%E0%B8%A5%E0%B8%B8%E0%B8%81%E0%B9%80%E0%B8%99%E0%B8%A2-3-3-1024x1024.jpg',
+      detail: 'อาจจะดีเครื่องปรุงไม่มากพอแต่ความอร่อยที่มีนั้นมากแน่ ๆ วัยรุ่นคลุกเนย',
+      icon: 'cup',
+      color: '#FF6B6B',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
+      name: 'ทอดมันข้าวโพด',
+      image: 'https://i.ytimg.com/vi/64MPcT32Zpk/maxresdefault.jpg',
+      detail: 'อะไรที่มัน ๆ ก็ทอดได้หมดใส่ข้าวโพดข้าวไป',
       icon: 'bowl-mix',
-      color: '#e9a143ff',
+      color: '#4CAF50',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
+      name: 'ซุปข้าวโพด',
+      image: 'https://s359.kapook.com/pagebuilder/826d6ccb-91ee-4a06-af85-bf3b67a36cf9.jpg',
+      detail: 'เมนูซดน้ำใคร ๆ ก็ชอบนะครับเว้ย !',
       icon: 'leaf',
       color: '#FF9800',
     },
   ];
 
-  
   return (
     <View style={styles.container}>
       {/* Header 
@@ -55,9 +53,9 @@ const MenuBrocoli = () => {
       >
         {/* Title Section */}
         <View style={styles.titleSection}>
-          <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
+          <MaterialCommunityIcons name="chef-hat"  size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากข้าวโพดเหลืองอร่อมสุดสวยหอมแน่น</Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +65,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('CornButter');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('CornFrittes');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('CornSoup');
               }
             }}
           >
@@ -216,4 +214,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuCorn;

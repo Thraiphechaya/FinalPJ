@@ -6,33 +6,33 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuCarrotNav = NativeStackNavigationProp<RootStackParamList, 'MenuCarrot'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuCarrot = () => {
+  const navigation = useNavigation<MenuCarrotNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
+      name: 'เค้กแครอท',
+      image: 'https://api2.krua.co/wp-content/uploads/2022/05/RB0526_Gallery_-06.jpg',
+      detail: 'เนื้อเค้กนุ่มฟู หอม ละมุนไปกับกลิ่นของแครอทแบบเฉพาะตัว',
       icon: 'bowl',
       color: '#d91e1bff',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
+      name: 'ซุปแครอท',
+      image: 'https://static.trueplookpanya.com/tppy/member/m_557500_560000/559387/cms/images/%E0%B9%80%E0%B8%A1%E0%B8%99%E0%B8%B9%E0%B8%8B%E0%B8%B8%E0%B8%9B%E0%B8%AA%E0%B8%B3%E0%B8%AB%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B9%80%E0%B8%94%E0%B9%87%E0%B8%81_09.jpg',
+      detail: 'เมนูซุปที่เหมาะสำหรับการกินง่าย อุดมไปด้วยบรรดาผักอีกด้วย',
       icon: 'bowl-mix',
       color: '#e9a143ff',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
+      name: 'สมูทตีแครอทส้ม',
+      image: 'https://www.joolzjuice.com/wp-content/uploads/2023/09/Orange-Carrot-Smoothie-Recipe.jpg',
+      detail: 'สูตรสมูทตี้เฟี้ยว ๆ ทำขายได้เลยกดเข้าไปสิ !!!',
       icon: 'leaf',
       color: '#FF9800',
     },
@@ -57,7 +57,7 @@ const MenuBrocoli = () => {
         <View style={styles.titleSection}>
           <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากแตงกวา </Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +67,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('CarrotCake');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('CarrotSoup');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('CarrotOrangeSmoothie');
               }
             }}
           >
@@ -216,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuCarrot;

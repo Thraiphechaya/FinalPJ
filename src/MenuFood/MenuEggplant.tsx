@@ -6,33 +6,33 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuEggplantNav = NativeStackNavigationProp<RootStackParamList, 'MenuEggplant'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuEggplant = () => {
+  const navigation = useNavigation<MenuEggplantNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
+      name: 'ผัดมะเขือยาวหมูสับใส่ใบโหระพา',
+      image: 'https://img.wongnai.com/p/1968x0/2020/05/18/a7f0ae328aaa45ac891618e851b4c191.jpg',
+      detail: 'เมนูทำง่ายกินง่ายอร่อยด้วยอิอิอิ !!',
       icon: 'bowl',
       color: '#d91e1bff',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
+      name: 'ยำมะเขือยาวกุ้งสด',
+      image: 'https://i.ytimg.com/vi/0A1E7WNcxGA/maxresdefault.jpg',
+      detail: 'เมนูคนชอบอะไรยำ ๆ เปรี้ยว ๆ เหมาะเลยจ้าา',
       icon: 'bowl-mix',
       color: '#e9a143ff',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
+      name: 'มะเขือยาวชุบไข่ทอด',
+      image: 'https://i.ytimg.com/vi/9m686V9DkcU/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCCeKfo-nhjhT3zybNfReLs928ghQ',
+      detail: 'จะต้มจะผัดหรือจะทอดก็ดี',
       icon: 'leaf',
       color: '#FF9800',
     },
@@ -57,7 +57,7 @@ const MenuBrocoli = () => {
         <View style={styles.titleSection}>
           <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากแตงกวา </Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +67,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('StirFriedEggplantPork');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('SpicyEggplantSaladShrimp');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('FriedEggplantEgg');
               }
             }}
           >
@@ -216,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuEggplant;

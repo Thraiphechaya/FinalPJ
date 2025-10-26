@@ -6,33 +6,33 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuOnionNav = NativeStackNavigationProp<RootStackParamList, 'MenuOnion'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuOnion = () => {
+  const navigation = useNavigation<MenuOnionNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
+      name: 'หอมทอด',
+      image: 'https://img.kapook.com/u/surauch/movie2/Deep-fried-onion.jpg',
+      detail: 'มีแค่หอมพร้อมเครื่องปรุงพร้อมก็อร่อยได้ !!!!!',
       icon: 'bowl',
       color: '#d91e1bff',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
+      name: 'ซุปหัวหอม',
+      image: 'https://img.kapook.com/u/surauch/movie2/onion-soup.jpg',
+      detail: 'ซุปหัวหอม หอมหวานกลมกล่อมสไตล์ฝรั่งเศส',
       icon: 'bowl-mix',
       color: '#e9a143ff',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
+      name: 'ยำหอมใหญ่สไตล์ญี่ปุ่น',
+      image: 'https://mlcd4iuuexdo.i.optimole.com/cb:FGzQ.22211/w:1200/h:900/q:mauto/ig:avif/https://mountainplums.com/wp-content/uploads/2025/04/%E3%81%8A%E7%9B%86-3.png',
+      detail: 'เมนูรักสุขภาพส่งตรงจากแดนกิมจิ !!!',
       icon: 'leaf',
       color: '#FF9800',
     },
@@ -57,7 +57,7 @@ const MenuBrocoli = () => {
         <View style={styles.titleSection}>
           <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากหอมใหญ่ </Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +67,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('OnionRings');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('FrenchOnionSoup');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('JapaneseOnionSalad');
               }
             }}
           >
@@ -216,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuOnion;

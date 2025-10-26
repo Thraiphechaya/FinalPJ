@@ -6,34 +6,34 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuZucchiniNav = NativeStackNavigationProp<RootStackParamList, 'MenuZucchini'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuZucchini = () => {
+  const navigation = useNavigation<MenuZucchiniNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
-      icon: 'bowl',
+      name: 'ซูกินีผัดไข่',
+      image: 'https://img.wongnai.com/p/1968x0/2019/07/11/8245f08950b44baeaf79d3b086c13300.jpg',
+      detail: 'ซูกินีเมนูไข่ เพราะเหมาะกับอะไรไข่ ๆ',
+      icon: 'cup',
       color: '#d91e1bff',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
-      icon: 'bowl-mix',
+      name: 'ซูกินีชุบแป้งทอด',
+      image: 'https://www.pholfoodmafia.com/wp-content/uploads/2023/01/5Hobak-Jeon.jpg',
+      detail: 'มาลองแนวเกาหลีมาาา !!!',
+      icon: 'bowl',
       color: '#e9a143ff',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
-      icon: 'leaf',
+      name: 'ซุปซูกินี',
+      image: 'https://img.freepik.com/premium-photo/zucchini-soup-bowl-wooden-table-copy-space_123827-767.jpg',
+      detail: 'เมนูมังสวิรัติ เฟี้ยว ๆ หอม ๆ',
+      icon: 'bowl',
       color: '#FF9800',
     },
   ];
@@ -57,7 +57,7 @@ const MenuBrocoli = () => {
         <View style={styles.titleSection}>
           <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากซูกินี</Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +67,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('StirFriedZucchiniEgg');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('FriedZucchini');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('ZucchiniSoup');
               }
             }}
           >
@@ -216,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuZucchini;

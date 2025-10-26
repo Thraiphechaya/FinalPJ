@@ -42,7 +42,7 @@ export type RootStackParamList = {
   
   // Vegetable Detail Screens - ผัก 13 ชนิด
   BeanScreen: undefined;
-  BellpeperScreen: undefined;
+  BellPepperScreen: undefined;
   BitterGourdScreen: undefined;
   BroccoliScreen: undefined;
   CabbageScreen: undefined;
@@ -54,6 +54,7 @@ export type RootStackParamList = {
   PotatoScreen: undefined;
   TomatoScreen: undefined;
   ZucchiniScreen: undefined;
+  CucumberScreen: undefined;
   
   // Menu Screens - เมนูแนะนำ
   MenuApple: undefined;
@@ -72,7 +73,7 @@ export type RootStackParamList = {
   MenuStrawberry: undefined;
   
   MenuBean: undefined;
-  MenuBellpeper: undefined;
+  MenuBellPepper: undefined;
   MenuBitterGourd: undefined;
   MenuBroccoli: undefined;
   MenuCabbage: undefined;
@@ -84,6 +85,7 @@ export type RootStackParamList = {
   MenuPotato: undefined;
   MenuTomato: undefined;
   MenuZucchini: undefined;
+  MenuCucumber: undefined;
   
   // Recipe Detail Screens - รายละเอียดอาหาร
   MenuDetail: { 
@@ -152,6 +154,107 @@ export type RootStackParamList = {
   MicrowaveCabbageFishSauce: undefined;
 
   //Brocoli
+  BroccoliFriedRice: undefined;
+  BroccoliShrimpStirFry: undefined;
+  CreamBroccoliSoup: undefined;
+
+  //Onion
+  FrenchOnionSoup: undefined;
+  JapaneseOnionSalad: undefined;
+  OnionRings: undefined;
+
+  //Cucumber
+  SpicyCucumberSalad: undefined;
+  StirFriedCucumberEgg: undefined;
+  CucumberSmoothie: undefined;
+
+  //Lemon
+  Lemonade: undefined;
+  LemonChicken: undefined;
+  LemonTart: undefined;
+
+  //Potato
+  MashedPotatoes: undefined;
+  BakedPotatoCheese: undefined;
+  GarlicButterPotatoes: undefined;
+
+  //Carrot
+  CarrotCake: undefined;
+  CarrotSoup: undefined;
+  CarrotOrangeSmoothie: undefined;
+
+  //Bellpepper
+  StuffedBellPeppers: undefined;
+  SweetSourStirFry: undefined;
+  StirFryPorkBellPepper: undefined;
+
+  //Corn
+  CornButter: undefined;
+  CornFrittes: undefined;
+  CornSoup: undefined;
+
+  //Eggplant
+  FriedEggplantEgg:undefined;
+  SpicyEggplantSaladShrimp: undefined;
+  StirFriedEggplantPork: undefined;
+
+  //BlackBerry
+  BlackberryCrumble: undefined;
+  BlackberryJam: undefined;
+  BlackberrySmoothie: undefined;
+
+  //Cantaloupe
+  CantaloupeMilkSmoothie: undefined;
+  CantaloupeSalad: undefined;
+  CantaloupelceCream: undefined;
+
+  //Zucchini
+  StirFriedZucchiniEgg: undefined;
+  FriedZucchini: undefined;
+  ZucchiniSoup: undefined;
+
+  //Cauliflower
+  CauliflowerCheeseBake: undefined;
+  FriedCauliflowerGarlic: undefined;
+  CauliflowerFriedRice: undefined;
+
+  //Beans
+  StirFriedPeasShrimp: undefined;
+  RedBeanSweetSoup: undefined;
+  MapoTofu: undefined;
+
+  //Pumpkin
+  StirFriedPumpkinEgg: undefined;
+  PumpkinCustard: undefined;
+  PumpkinSoup: undefined;
+
+  //BitterGourd
+  StuffedBitterGourdSoup: undefined;
+  StirFriedBitterGourdEgg: undefined;
+  BraisedBitterGourdPorkRibs: undefined;
+
+  //Nut
+  MixedNutSalad: undefined;
+  HoneyRoastedCashews: undefined;
+  WalnutBrownies: undefined;
+
+  
+
+  
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+
 
 
 

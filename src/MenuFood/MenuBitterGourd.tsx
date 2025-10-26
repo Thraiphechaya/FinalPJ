@@ -3,42 +3,40 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuBitterGourdNav = NativeStackNavigationProp<RootStackParamList, 'MenuBitterGourd'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuBitterGourd = () => {
+  const navigation = useNavigation<MenuBitterGourdNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
-      icon: 'bowl',
-      color: '#d91e1bff',
+      name: 'แกงจืดมะระยัดไส้หมูสับ',
+      image: 'https://i.ytimg.com/vi/fSQnmuXleq8/maxresdefault.jpg',
+      detail: 'กินอิ่มสารอาหารครบ อร่อย ๆ',
+      icon: 'cup',
+      color: '#FF6B6B',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
+      name: 'มะระผัดไข่',
+      image: 'https://f.ptcdn.info/129/077/000/rb4t3zlhvHsg388LMHI-o.jpg',
+      detail: 'มะระใส่ไข่ก็อร่อยน้าาาน้องง !!',
       icon: 'bowl-mix',
-      color: '#e9a143ff',
+      color: '#4CAF50',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
+      name: 'มะระตุ๋นกระดูกหมู',
+      image: 'https://i.ytimg.com/vi/zVQkjzUbM4U/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDqdZaXsiTuKyU_6b2VmbIWj-0bKA',
+      detail: 'เมนูกินง่ายเด็ก ๆ ก็ทานได้ไม่ขมนะ !',
       icon: 'leaf',
       color: '#FF9800',
     },
   ];
 
-  
   return (
     <View style={styles.container}>
       {/* Header 
@@ -55,9 +53,9 @@ const MenuBrocoli = () => {
       >
         {/* Title Section */}
         <View style={styles.titleSection}>
-          <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
+          <MaterialCommunityIcons name="chef-hat"  size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากพริกหยวกเฟี้ยว ๆ</Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +65,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('BraisedBitterGourdPorkRibs');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('StirFriedBitterGourdEgg');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('BraisedBitterGourdPorkRibs');
               }
             }}
           >
@@ -216,4 +214,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuBitterGourd;

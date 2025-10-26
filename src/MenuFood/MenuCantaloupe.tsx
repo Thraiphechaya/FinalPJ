@@ -6,34 +6,34 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuCantaloupeNav = NativeStackNavigationProp<RootStackParamList, 'MenuCantaloupe'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuCantaloupe = () => {
+  const navigation = useNavigation<MenuCantaloupeNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
-      icon: 'bowl',
+      name: 'แคนตาลูปนมสดปั่น',
+      image: 'https://img.wongnai.com/p/192x192/2020/01/20/68ee852882424b11abf25121db212e78.jpg',
+      detail: 'มารู้จักกับแคนตาลูปกันเน้ออ',
+      icon: 'cup',
       color: '#d91e1bff',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
-      icon: 'bowl-mix',
+      name: 'สลัดแคนตาลูป',
+      image: 'https://img.kapook.com/u/2021/wanwanat/1776529970.jpg',
+      detail: 'เมนูที่เหมาะสำหรับคนไดเอทอาหารหรือต้องการความคลีนนน',
+      icon: 'bowl',
       color: '#e9a143ff',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
-      icon: 'leaf',
+      name: 'ไอศกรีมแคนตาลูป',
+      image: 'https://img.kapook.com/u/2021/wanwanat/1995701831.jpg',
+      detail: 'ดับร้อนได้เลย !!',
+      icon: 'bowl',
       color: '#FF9800',
     },
   ];
@@ -57,7 +57,7 @@ const MenuBrocoli = () => {
         <View style={styles.titleSection}>
           <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากกะหล่ำปลี </Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +67,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('CantaloupeMilkSmoothie');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('CantaloupeSalad');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('CantaloupelceCream');
               }
             }}
           >
@@ -216,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuCantaloupe;

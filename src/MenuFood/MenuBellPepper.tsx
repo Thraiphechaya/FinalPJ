@@ -3,42 +3,40 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuBellPepperNav = NativeStackNavigationProp<RootStackParamList, 'MenuBellPepper'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuBellPepper = () => {
+  const navigation = useNavigation<MenuBellPepperNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
-      icon: 'bowl',
-      color: '#d91e1bff',
+      name: 'พริกหยวกยัดไส้หมูสับ',
+      image: 'https://s359.kapook.com/pagebuilder/31602952-89da-493a-9d6a-e0e171c842b7.jpg',
+      detail: 'เมนูดีและทำง่ายมากโครตแซ่บ',
+      icon: 'cup',
+      color: '#FF6B6B',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
+      name: 'ผัดเปรี้ยวหวาน',
+      image: 'https://img.kapook.com/u/surauch/movie2/sweet-and-sour-pofrk.jpg',
+      detail: 'ผัดเปรี้ยวหวาน เป็นอาหารคาวชนิดหนึ่งใช้ผัก เช่น แตงกวา มะเขือเทศ หอมใหญ่ ผัดกับเนื้อสัตว์ปรุงให้มีรสออกเปรี้ยวและหวาน',
       icon: 'bowl-mix',
-      color: '#e9a143ff',
+      color: '#4CAF50',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
+      name: 'ผัดพริกหยวกหมูสับ',
+      image: 'https://img.wongnai.com/p/1968x0/2023/07/16/47dad10e42ed4d199e5be5f12ddecbdd.jpg',
+      detail: 'ผัดไม่เยอะผัดนิดน้อยพรุ่งนี้อร่อยวันนี้ก็อร่อย',
       icon: 'leaf',
       color: '#FF9800',
     },
   ];
 
-  
   return (
     <View style={styles.container}>
       {/* Header 
@@ -55,9 +53,9 @@ const MenuBrocoli = () => {
       >
         {/* Title Section */}
         <View style={styles.titleSection}>
-          <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
+          <MaterialCommunityIcons name="chef-hat"  size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากพริกหยวกเฟี้ยว ๆ</Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +65,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('StuffedBellPeppers');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('SweetSourStirFry');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('StirFryPorkBellPepper');
               }
             }}
           >
@@ -216,4 +214,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuBellPepper;

@@ -6,34 +6,34 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuCauliflowerNav = NativeStackNavigationProp<RootStackParamList, 'MenuCauliflower'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuCauliflower = () => {
+  const navigation = useNavigation<MenuCauliflowerNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
-      icon: 'bowl',
+      name: 'กะหล่ำดอกอบชีส',
+      image: 'https://img.kapook.com/u/2015/surauch/Cook/cheese.jpg',
+      detail: 'อาหารฝรั่งเมนูชีสกลิ่นหอม',
+      icon: 'cup',
       color: '#d91e1bff',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
-      icon: 'bowl-mix',
+      name: 'กะหล่ำทอดกระเทียม',
+      image: 'https://s359.kapook.com/pagebuilder/b291a08f-85fc-44f8-b87d-b72fe9024b28.jpg',
+      detail: 'อาหารคีโตทำง่าย ๆ ได้ที่บ้านของท่าน',
+      icon: 'bowl',
       color: '#e9a143ff',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
-      icon: 'leaf',
+      name: 'ข้าวผัดกะหล่ำดอก',
+      image: 'https://s359.kapook.com/pagebuilder/107d9c22-c561-4e73-83d8-ec8eb89afe28.jpg',
+      detail: 'ดับร้อนได้เลย !!',
+      icon: 'bowl',
       color: '#FF9800',
     },
   ];
@@ -57,7 +57,7 @@ const MenuBrocoli = () => {
         <View style={styles.titleSection}>
           <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากดอกกะหล่ำสุดฮิต </Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +67,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('CauliflowerCheeseBake');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('FriedCauliflowerGarlic');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('CauliflowerFriedRice');
               }
             }}
           >
@@ -216,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuCauliflower;

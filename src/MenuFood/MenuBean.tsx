@@ -3,49 +3,43 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuBeanNav = NativeStackNavigationProp<RootStackParamList, 'MenuBean'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuBean = () => {
+  const navigation = useNavigation<MenuBeanNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
-      icon: 'bowl',
-      color: '#d91e1bff',
+      name: 'ถั่วลันเตาผัดกุ้ง',
+      image: 'https://img.wongnai.com/p/1920x0/2018/12/21/520e294f850a4607b9462e68b7978c8b.jpg',
+      detail: 'เมนูผัดสุดแสนจะอร่อยเหนือล้นคำบรรยาย',
+      icon: 'cup',
+      color: '#FF6B6B',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
+      name: 'ถั่วแดงต้มน้ำตาล',
+      image: 'https://www3.nhk.or.jp/nhkworld/en/radio/cooking/update/meal_110107_l.jpg',
+      detail: 'เมนูของหวานสุดแสนจะอร่อย !!',
       icon: 'bowl-mix',
-      color: '#e9a143ff',
+      color: '#4CAF50',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
+      name: 'เต้าหู้ทรงเครื่อง',
+      image: 'https://img-global.cpcdn.com/recipes/9f25590b2772b637/680x781cq80/%E0%B8%A3%E0%B8%9B-%E0%B8%AB%E0%B8%A5%E0%B8%81-%E0%B8%82%E0%B8%AD%E0%B8%87-%E0%B8%AA%E0%B8%95%E0%B8%A3-%E0%B9%80%E0%B8%95%E0%B8%B2%E0%B8%AB%E0%B8%97%E0%B8%A3%E0%B8%87%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%AD%E0%B8%87-%E0%B9%80%E0%B8%95%E0%B8%B2%E0%B8%AB%E0%B8%99%E0%B8%B3%E0%B9%81%E0%B8%94%E0%B8%87.jpg',
+      detail: 'ได้สารอาหารครบแน่ ๆ เมนูนี้จิ้มเลย',
       icon: 'leaf',
       color: '#FF9800',
     },
   ];
 
-  
   return (
     <View style={styles.container}>
-      {/* Header 
-      <View style={styles.header}>
-        <Text style={styles.time}>9:41</Text>
-      </View>
-      */}
+  
 
       {/* Main Content */}
       <ScrollView 
@@ -55,9 +49,9 @@ const MenuBrocoli = () => {
       >
         {/* Title Section */}
         <View style={styles.titleSection}>
-          <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
+          <MaterialCommunityIcons name="chef-hat"  size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากถั่วลันเตา</Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +61,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('StirFriedPeasShrimp');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('RedBeanSweetSoup');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('MapoTofu');
               }
             }}
           >
@@ -216,4 +210,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuBean;

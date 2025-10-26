@@ -6,33 +6,33 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import  FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { RootStackParamList } from '../types';
 
-type MenuBrocoliNav = NativeStackNavigationProp<RootStackParamList, 'MenuBroccoli'>;
+type MenuCucumberNav = NativeStackNavigationProp<RootStackParamList, 'MenuCucumber'>;
 
-const MenuBrocoli = () => {
-  const navigation = useNavigation<MenuBrocoliNav>();
+const MenuCucumber = () => {
+  const navigation = useNavigation<MenuCucumberNav>();
 
   const menus = [
     {
       id: 1,
-      name: 'บรอกโคลีผัดกุ้ง',
-      image: 'https://th.openrice.com/userphoto/Recipe/0/17/0008KJ1A575D6950FFF01Fl.jpg',
-      detail: 'เมนูยอดฮิตใคร ๆ ก็ทำด้ายยย',
+      name: 'ยำแตงกวาหมูยอ',
+      image: 'https://f.ptcdn.info/640/074/000/qyjpj018zr3CSN0J2mDa-o.jpg',
+      detail: 'ยำหมูแบบอร่อยง่าย ๆ กลมกล่อมแซ่บ ๆ',
       icon: 'bowl',
       color: '#d91e1bff',
     },
     {
       id: 2,
-      name: 'ซุปครีมบรอกโคลี',
-      image: 'https://img.kapook.com/u/surauch/movie2/shutterstock_10758841.jpg',
-      detail: 'เมนูเด็ด ทานง่ายเหมาะกับทุกวัย',
+      name: 'แตงกวาผัดไข่',
+      image: 'https://howtocookhub.com/wp-content/uploads/2023/09/4.png',
+      detail: 'อาหารดีต่อสุขภาพ เหมาะสำหรับคนลดน้ำหนักด้วย !!!',
       icon: 'bowl-mix',
       color: '#e9a143ff',
     },
     {
       id: 3,
-      name: 'ข้าวผัดบรอกโคลีมสดอะโวคาโด',
-      image: 'https://www.easycookingmenu.com/media/k2/items/cache/ea9e81301daf974563f48aafeb2472aa_XL.jpg',
-      detail: 'กินง่ายอร่อยด้วย !!',
+      name: 'น้ำแตงกวาปั่น',
+      image: 'https://health.campus-star.com/app/uploads/2016/09/cucumber-juice.jpg',
+      detail: 'น้ำปั่นอะไรดื่มแล้วไม่รู้สึกผิดด !!!',
       icon: 'leaf',
       color: '#FF9800',
     },
@@ -57,7 +57,7 @@ const MenuBrocoli = () => {
         <View style={styles.titleSection}>
           <MaterialCommunityIcons name='fruit-citrus' size={32} color="#2E7D32" />
           <Text style={styles.title}>Recommended Menu</Text>
-          <Text style={styles.subtitle}>เมนูแนะนำจากบรอกโคลี</Text>
+          <Text style={styles.subtitle}>เมนูแนะนำจากแตงกวา </Text>
         </View>
 
         {/* Menu Cards */}
@@ -67,11 +67,11 @@ const MenuBrocoli = () => {
             style={styles.card}
             onPress={() => {
               if (menu.id === 1) {
-                navigation.navigate('BroccoliShrimpStirFry');
+                navigation.navigate('SpicyCucumberSalad');
               } else if (menu.id === 2) {
-                navigation.navigate('CreamBroccoliSoup');
+                navigation.navigate('StirFriedCucumberEgg');
               } else if (menu.id === 3) {
-                navigation.navigate('BroccoliFriedRice');    
+                navigation.navigate('CucumberSmoothie');
               }
             }}
           >
@@ -216,4 +216,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MenuBrocoli;
+export default MenuCucumber;
