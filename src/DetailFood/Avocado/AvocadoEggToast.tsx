@@ -1,0 +1,357 @@
+import React from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { RootStackParamList } from '../../types'; // สมมติว่า path นี้ถูกต้อง
+
+
+type AvocadoScreenNav = NativeStackNavigationProp<RootStackParamList, 'AvocadoEggToast'>; 
+
+const AvocadoEggToast = () => { 
+  const navigation = useNavigation<AvocadoScreenNav>();
+
+  const mainIngredients = [
+    { name: 'ขนมปัง (แผ่นหนา เช่น Sourdough)', amount: '1-2 แผ่น' },
+    { name: 'อะโวคาโด (สุกนิ่ม)', amount: '1 ลูก' },
+    { name: 'ไข่ไก่', amount: '1-2 ฟอง' },
+    { name: 'เนย หรือ น้ำมันมะกอก', amount: 'เล็กน้อย' },
+    { name: 'น้ำมะนาว', amount: '1/2 ช้อนชา' },
+    { name: 'เกลือ, พริกไทยดำบดหยาบ', amount: 'สำหรับโรยหน้า' },
+  ];
+
+  const steps = [
+    { 
+      number: 1, 
+      text: 'นำขนมปังไปปิ้งในเครื่องปิ้ง หรือทาเนย/น้ำมันมะกอก แล้วจี่บนกระทะจนกรอบเหลือง'
+    },
+    { 
+      number: 2, 
+      text: 'เตรียมอะโวคาโด: ตักเนื้อใส่ชาม ใช้ส้อมบดหยาบๆ'
+    },
+    { 
+      number: 3, 
+      text: 'ปรุงรสอะโวคาโดบด ด้วยน้ำมะนาว เกลือ และพริกไทยเล็กน้อย คลุกเคล้าให้เข้ากัน'
+    },
+    { 
+      number: 4, 
+      text: 'เตรียมไข่: ทอดไข่ดาว (ไข่แดงเยิ้ม) หรือทำไข่คน (Scrambled eggs) ตามชอบ'
+    },
+    { 
+      number: 5, 
+      text: 'ประกอบร่าง: ตักอะโวคาโดบด ปาดลงบนขนมปังปิ้งให้ทั่ว'
+    },
+    { 
+      number: 6, 
+      text: 'วางไข่ดาวที่ทอดไว้ด้านบน'
+    },
+    { 
+      number: 7, 
+      text: 'โรยหน้าด้วยพริกไทยดำบดหยาบ และเกลือเล็กน้อย พร้อมเสิร์ฟ'
+    },
+  ];
+
+  return (
+    <View style={styles.container}>
+      <ScrollView 
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Hero Section */}
+        <View style={styles.heroCard}>
+          <Image
+            source={{
+              uri: 'https://img.wongnai.com/p/1968x0/2018/05/07/7bcb1b7eebe24a6bbf679313d4033961.jpg',
+            }}
+            style={styles.image}
+          />
+          <View style={styles.heroContent}>
+            <Text style={styles.title}>ขนมปังปิ้งไข่ อะโวคาโด้</Text>
+            <View style={[styles.tasteTag, { backgroundColor: '#FFF9E6' }]}>
+              {/* ใช้ as any เพื่อแก้ปัญหา TypeScript */}
+              <MaterialCommunityIcons name="egg-fried" size={16} color="#E65100" />
+              <Text style={[styles.tasteText, { color: '#E65100' }]}>มื้อเช้าพลังงานสูง อร่อย!</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Time Info */}
+        <View style={styles.timeCard}>
+          <View style={styles.timeItem}>
+            <MaterialCommunityIcons name="clock-outline" size={20} color="#4CAF50" />
+            <Text style={styles.timeLabel}>เวลาเตรียม</Text>
+            <Text style={styles.timeValue}>5 นาที</Text>
+          </View>
+          <View style={styles.timeSeparator} />
+          <View style={styles.timeItem}>
+            <MaterialCommunityIcons name="chef-hat" size={20} color="#FF9800" />
+            <Text style={styles.timeLabel}>เวลาปรุง</Text>
+            <Text style={styles.timeValue}>10 นาที</Text>
+          </View>
+          <View style={styles.timeSeparator} />
+          <View style={styles.timeItem}>
+            <MaterialCommunityIcons name="scale" size={20} color="#2196F3" />
+            <Text style={styles.timeLabel}>สำหรับ</Text>
+            <Text style={styles.timeValue}>1 ที่</Text>
+          </View>
+        </View>
+
+        {/* Main Ingredients Section */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeader}>
+            <MaterialCommunityIcons name="food" size={24} color="#388E3C" />
+            <View>
+              <Text style={styles.sectionTitle}>ส่วนผสม</Text>
+            </View>
+          </View>
+          <View style={styles.ingredientsList}>
+            {mainIngredients.map((item, index) => (
+              <View key={index} style={styles.ingredientItem}>
+                <View style={[styles.ingredientDot, { backgroundColor: '#4CAF50' }]} />
+                <View style={styles.ingredientText}>
+                  <Text style={styles.ingredientName}>{item.name}</Text>
+                  <Text style={styles.ingredientAmount}>{item.amount}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Instructions Section */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeader}>
+            <MaterialCommunityIcons name="chef-hat" size={24} color="#FF6B6B" />
+            <Text style={styles.sectionTitle}>วิธีทำ</Text>
+          </View>
+          <View style={styles.stepsList}>
+            {steps.map((step, index) => (
+              <View key={index} style={styles.stepItem}>
+                <View style={styles.stepNumberContainer}>
+                  <View style={styles.stepNumber}>
+                    <Text style={styles.stepNumberText}>{step.number}</Text>
+                  </View>
+                </View>
+                <View style={styles.stepContent}>
+                  <Text style={styles.stepText}>{step.text}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+        
+        {/* Tips Section */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeader}>
+            <MaterialCommunityIcons name="lightbulb-on" size={24} color="#FFD700" />
+            <Text style={styles.sectionTitle}>เคล็ดลับสำคัญ</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <MaterialCommunityIcons name="light-flood-down" size={16} color="#E65100" />
+            <Text style={styles.tipText}>แทนที่จะบด สามารถหั่นอะโวคาโดเป็นสไลซ์บางๆ แล้วเรียงบนขนมปัง (Fanned Avocado) ก็สวยงาม</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <MaterialCommunityIcons name={"chili-hot" as any} size={16} color="#F44336" />
+            <Text style={styles.tipText}>โรยหน้าด้วยพริกป่น (Chili Flakes) เล็กน้อย จะช่วยตัดเลี่ยนและเพิ่มรสชาติ</Text>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#A4E4A0', // สีพื้นหลัง
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 30,
+  },
+  heroCard: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginBottom: 16,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+  },
+  image: {
+    width: '100%',
+    height: 200,
+  },
+  heroContent: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#2E7D32',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  tasteTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFF9F9', 
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignSelf: 'center',
+  },
+  tasteText: {
+    fontSize: 14,
+    color: '#FF6B6B', 
+    marginLeft: 6,
+    fontWeight: '500',
+  },
+  timeCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  timeItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  timeSeparator: {
+    width: 1,
+    height: 40,
+    backgroundColor: '#E0E0E0',
+  },
+  timeLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  timeValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 2,
+    textAlign: 'center',
+  },
+  sectionCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginLeft: 8,
+  },
+  sectionSubtitle: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 8,
+    marginTop: 2,
+  },
+  ingredientsList: {
+    marginTop: 8,
+  },
+  ingredientItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  ingredientDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 12,
+  },
+  ingredientText: {
+    flex: 1,
+  },
+  ingredientName: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 2,
+  },
+  ingredientAmount: {
+    fontSize: 12,
+    color: '#666',
+  },
+  stepsList: {
+    marginTop: 8,
+  },
+  stepItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+  stepNumberContainer: {
+    marginRight: 12,
+  },
+  stepNumber: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#FF9800',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  stepNumberText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  stepContent: {
+    flex: 1,
+  },
+  stepText: {
+    fontSize: 14,
+    color: '#333',
+    lineHeight: 20,
+    marginBottom: 4,
+  },
+  tipContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#FFF9E6',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  tipText: {
+    fontSize: 12,
+    color: '#E65100',
+    marginLeft: 8,
+    flex: 1,
+    lineHeight: 16,
+  },
+});
+
+export default AvocadoEggToast;

@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RootStackParamList } from '../../types';
 
-type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaScreen'>;
+type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaCake'>;
 
 const ButteredBanana = () => {
   const navigation = useNavigation<BananaScreenNav>();
@@ -64,7 +64,7 @@ const ButteredBanana = () => {
           <View style={styles.heroContent}>
             <Text style={styles.title}>กล้วยอบเนย</Text>
             <View style={styles.tasteTag}>
-              <MaterialCommunityIcons name="fruit-banana" size={16} color="#FFD700" />
+              <MaterialCommunityIcons name={("fruit-banana" as any)} size={16} color="#FFD700" />
               <Text style={styles.tasteText}>หวานหอมจากกล้วยหอมและเนยสด</Text>
             </View>
           </View>

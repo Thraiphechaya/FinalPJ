@@ -1,8 +1,12 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { 
+  View, 
+  TouchableOpacity, 
+  StyleSheet 
+} from 'react-native';
 import { useNavigation, NavigationProp, useRoute } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
-// Define your navigation stack types
 type RootStackParamList = {
   Home: undefined;
   Snap: undefined;
@@ -11,40 +15,34 @@ type RootStackParamList = {
 };
 
 interface TabbarProps {
-  activeTab?: 'home' | 'snap' | 'favorite' | 'search'; // optional fallback
+  activeTab?: 'home' | 'snap' | 'favorite' | 'search';
 }
 
 const Tabbar: React.FC<TabbarProps> = ({ activeTab }) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const route = useRoute();
   
-  // ⚠️ ตรวจสอบหน้าปัจจุบันจาก route name
+  // ตรวจสอบหน้าปัจจุบันจาก route name
   const getCurrentTab = (): 'home' | 'snap' | 'favorite' | 'search' => {
-    const routeName = route.name.toLowerCase();
+    const routeName = route.name;
     
     switch (routeName) {
-      case 'home':
-      case 'homescreen': // รองรับชื่อ component ที่อาจแตกต่าง
+      case 'Home':
         return 'home';
-      case 'snap':
-      case 'snapscreen':
+      case 'Snap':
         return 'snap';
-      case 'favorite':
-      case 'favorites':
-      case 'favoritescreen':
+      case 'Favorite':
         return 'favorite';
-      case 'search':
-      case 'searchscreen':
+      case 'Search':
         return 'search';
       default:
-        return activeTab || 'home'; // fallback
+        return activeTab || 'home';
     }
   };
 
   const currentActiveTab = getCurrentTab();
 
   const handleTabPress = (tab: string) => {
-    // ไม่ navigate ถ้าอยู่หน้าเดิมแล้ว
     if (tab === currentActiveTab) return;
     
     switch (tab) {
@@ -63,92 +61,52 @@ const Tabbar: React.FC<TabbarProps> = ({ activeTab }) => {
     }
   };
 
+  // Icon แบบมินิมอล - แก้ไข type error
   const renderTabIcon = (tab: string) => {
     const isActive = currentActiveTab === tab;
-    
-    // ⚠️ เปลี่ยนสีตามสถานะ active
-    const iconColor = isActive ? '#4ADE80' : '#9CA3AF'; // สีเขียวเมื่อ active, สีเทาเมื่อไม่ active
-    const backgroundColor = isActive ? 'rgba(74, 222, 128, 0.1)' : 'transparent'; // background สีเขียวอ่อน
-    
-    const iconContainerStyle = [
-      styles.iconContainer,
-      isActive && styles.activeIconContainer,
-      { backgroundColor }
-    ];
+    const iconColor = isActive ? '#10B981' : '#9CA3AF';
+    const iconSize = 22;
+
+    // กำหนด icon name โดยตรงแทนการใช้ object
+    let iconName: any = 'home-outline';
     
     switch (tab) {
       case 'home':
-        return (
-          <View style={iconContainerStyle}>
-            <View style={styles.homeIconWrapper}>
-              <View style={[styles.homeIcon, { backgroundColor: iconColor }]} />
-              <View style={[styles.homeIconRoof, { borderBottomColor: iconColor }]} />
-            </View>
-            {isActive && <View style={styles.activeIndicator} />}
-          </View>
-        );
+        iconName = isActive ? 'home' : 'home-outline';
+        break;
       case 'snap':
-        return (
-          <View style={iconContainerStyle}>
-            <View style={[styles.cameraIcon, { borderColor: iconColor }]}>
-              <View style={[styles.cameraLens, { backgroundColor: iconColor }]} />
-              <View style={[styles.cameraFlash, { backgroundColor: iconColor }]} />
-            </View>
-            {isActive && <View style={styles.activeIndicator} />}
-          </View>
-        );
+        iconName = isActive ? 'camera' : 'camera-outline';
+        break;
       case 'favorite':
-        return (
-          <View style={iconContainerStyle}>
-            <View style={styles.heartIconWrapper}>
-              {isActive ? (
-                // ❤️ Filled heart เมื่อ active
-                <View style={[styles.heartIconFilled, { backgroundColor: iconColor }]} />
-              ) : (
-                // 🤍 Outline heart เมื่อไม่ active
-                <>
-                  <View style={[styles.heartLeft, { backgroundColor: iconColor }]} />
-                  <View style={[styles.heartRight, { backgroundColor: iconColor }]} />
-                  <View style={[styles.heartBottom, { backgroundColor: iconColor }]} />
-                </>
-              )}
-            </View>
-            {isActive && <View style={styles.activeIndicator} />}
-          </View>
-        );
+        iconName = isActive ? 'heart' : 'heart-outline';
+        break;
       case 'search':
-        return (
-          <View style={iconContainerStyle}>
-            <View style={styles.searchIconWrapper}>
-              <View style={[styles.searchIcon, { borderColor: iconColor }]} />
-              <View style={[styles.searchHandle, { backgroundColor: iconColor }]} />
-            </View>
-            {isActive && <View style={styles.activeIndicator} />}
-          </View>
-        );
-      default:
-        return null;
+        iconName = isActive ? 'search' : 'search-outline';
+        break;
     }
+
+    return (
+      <View style={styles.iconContainer}>
+        <Ionicons 
+          name={iconName} 
+          size={iconSize} 
+          color={iconColor} 
+        />
+        {isActive && <View style={styles.activeDot} />}
+      </View>
+    );
   };
 
   return (
     <View style={styles.tabBar}>
-      {[
-        { key: 'home', label: '🏠' },
-        { key: 'snap', label: '📸' },
-        { key: 'favorite', label: '❤️' },
-        { key: 'search', label: '🔍' }
-      ].map(({ key, label }) => (
+      {['home', 'snap', 'favorite', 'search'].map((tab) => (
         <TouchableOpacity
-          key={key}
-          style={[
-            styles.tabButton,
-            currentActiveTab === key && styles.activeTabButton
-          ]}
-          onPress={() => handleTabPress(key)}
+          key={tab}
+          style={styles.tabButton}
+          onPress={() => handleTabPress(tab)}
           activeOpacity={0.7}
         >
-          {renderTabIcon(key)}
+          {renderTabIcon(tab)}
         </TouchableOpacity>
       ))}
     </View>
@@ -161,166 +119,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderTopWidth: 1,
+    borderTopWidth: 0.5,
     borderTopColor: '#E5E7EB',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 8,
+    height: 56,
   },
   tabButton: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 4,
-    borderRadius: 12,
-    minHeight: 48,
     justifyContent: 'center',
-  },
-  activeTabButton: {
-    // เพิ่มเอฟเฟ็กต์เมื่อ active
-    transform: [{ scale: 1.05 }],
+    paddingVertical: 6,
   },
   iconContainer: {
-    width: 32,
-    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-    borderRadius: 16,
     padding: 4,
   },
-  activeIconContainer: {
-    // เพิ่ม animation เมื่อ active
-    transform: [{ scale: 1.1 }],
-  },
-  activeIndicator: {
+  activeDot: {
     position: 'absolute',
     bottom: -2,
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#4ADE80',
-  },
-  
-  // Home Icon Styles
-  homeIconWrapper: {
-    width: 20,
-    height: 20,
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  homeIcon: {
-    width: 14,
-    height: 10,
-    position: 'absolute',
-    bottom: 0,
-    borderRadius: 2,
-  },
-  homeIconRoof: {
-    width: 0,
-    height: 0,
-    borderLeftWidth: 9,
-    borderRightWidth: 9,
-    borderBottomWidth: 7,
-    borderLeftColor: 'transparent',
-    borderRightColor: 'transparent',
-    position: 'absolute',
-    top: 2,
-  },
-  
-  // Camera Icon Styles
-  cameraIcon: {
-    width: 18,
-    height: 14,
-    borderWidth: 2,
-    borderRadius: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  cameraLens: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  cameraFlash: {
     width: 3,
-    height: 2,
-    position: 'absolute',
-    top: -3,
-    left: 2,
-    borderRadius: 1,
-  },
-  
-  // Heart Icon Styles
-  heartIconWrapper: {
-    width: 18,
-    height: 16,
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heartIconFilled: {
-    width: 16,
-    height: 14,
-    borderRadius: 8,
-    transform: [{ rotate: '-45deg' }],
-  },
-  heartLeft: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    position: 'absolute',
-    left: 1,
-    top: 0,
-  },
-  heartRight: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    position: 'absolute',
-    right: 1,
-    top: 0,
-  },
-  heartBottom: {
-    width: 2,
-    height: 8,
-    position: 'absolute',
-    bottom: 0,
-    left: '50%',
-    marginLeft: -1,
-    transform: [{ rotate: '45deg' }],
-  },
-  
-  // Search Icon Styles  
-  searchIconWrapper: {
-    width: 18,
-    height: 18,
-    position: 'relative',
-  },
-  searchIcon: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    borderWidth: 2,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  searchHandle: {
-    width: 6,
-    height: 2,
-    position: 'absolute',
-    bottom: 2,
-    right: 0,
-    borderRadius: 1,
-    transform: [{ rotate: '45deg' }],
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: '#10B981',
   },
 });
 

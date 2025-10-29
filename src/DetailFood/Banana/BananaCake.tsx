@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RootStackParamList } from '../../types';
 
-type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaScreen'>;
+type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaCake'>;
 
 const BananaCake = () => {
   const navigation = useNavigation<BananaScreenNav>();
@@ -117,7 +117,7 @@ const BananaCake = () => {
         {/* Main Ingredients Section */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="fruit-banana" size={24} color="#FFD700" />
+            <MaterialCommunityIcons name={("fruit-banana" as any)} size={24} color="#FFD700" />
             <View>
               <Text style={styles.sectionTitle}>ส่วนผสมหลัก</Text>
               <Text style={styles.sectionSubtitle}>สำหรับตัวขนม</Text>
@@ -196,11 +196,11 @@ const BananaCake = () => {
             <Text style={styles.sectionTitle}>เคล็ดลับสำคัญ</Text>
           </View>
           <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="fruit-banana"size={16} color="#FF9800" />
+            <MaterialCommunityIcons name={("fruit-banana" as any)} size={16} color="#FF9800" />
             <Text style={styles.tipText}>ใช้กล้วยน้ำว้าสุกจะได้รสหวานหอมธรรมชาติ</Text>
           </View>
           <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="mixer" size={16} color="#4CAF50" />
+            <MaterialCommunityIcons name={("mixer" as any)} size={16} color="#4CAF50" />
             <Text style={styles.tipText}>ผสมแป้งให้เข้ากันดีก่อนใส่ส่วนผสมอื่น</Text>
           </View>
           <View style={styles.tipContainer}>

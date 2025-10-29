@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RootStackParamList } from '../../types';
 
-type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaScreen'>;
+type BananaScreenNav = NativeStackNavigationProp<RootStackParamList, 'BananaCake'>;
 
 const CaramelBananaToast = () => {
   const navigation = useNavigation<BananaScreenNav>();
@@ -78,7 +78,7 @@ const CaramelBananaToast = () => {
           <View style={styles.heroContent}>
             <Text style={styles.title}>คาราเมลบานอฟฟีโทสต์</Text>
             <View style={styles.tasteTag}>
-              <MaterialCommunityIcons name="toast" size={16} color="#FF9800" />
+              <MaterialCommunityIcons name={("toast" as any)} size={16} color="#FF9800" />
               <Text style={styles.tasteText}>ขนมปังคาราเมลกับกล้วยหอมและซอสคาราเมล</Text>
             </View>
           </View>
@@ -108,7 +108,7 @@ const CaramelBananaToast = () => {
         {/* Toast Ingredients Section */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="toast" size={24} color="#8B4513" />
+            <MaterialCommunityIcons name={("toast" as any)} size={24} color="#8B4513" />
             <View>
               <Text style={styles.sectionTitle}>วัตถุดิบบานอฟฟีโทสต์</Text>
               <Text style={styles.sectionSubtitle}>ส่วนประกอบหลัก</Text>
@@ -131,7 +131,7 @@ const CaramelBananaToast = () => {
         {/* Caramel Sauce Ingredients Section */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
-            <MaterialCommunityIcons name="saucepan" size={24} color="#D2691E" />
+            <MaterialCommunityIcons name={("saucepan" as any)} size={24} color="#D2691E" />
             <View>
               <Text style={styles.sectionTitle}>ซอสคาราเมล</Text>
               <Text style={styles.sectionSubtitle}>ส่วนผสมซอส</Text>
@@ -197,7 +197,7 @@ const CaramelBananaToast = () => {
             <Text style={styles.tipText}>ใช้วิปปิงครีมอุณหภูมิห้องเพื่อผสมซอสได้ง่าย</Text>
           </View>
           <View style={styles.tipContainer}>
-            <MaterialCommunityIcons name="fruit-banana" size={16} color="#FFD700" />
+            <MaterialCommunityIcons name={("fruit-banana" as any)} size={16} color="#FFD700" />
             <Text style={styles.tipText}>เลือกกล้วยหอมสุกพอดีสำหรับรสชาติที่ดีที่สุด</Text>
           </View>
         </View>

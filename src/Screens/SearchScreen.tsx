@@ -1,541 +1,887 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
+  ScrollView,
   TouchableOpacity,
   StatusBar,
-  SafeAreaView,
-  ScrollView,
-  TextInput,
-  ActivityIndicator,
   Alert,
+  ActivityIndicator,
   Image,
+  TextInput,
+  Animated,
+  Dimensions,
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import Tabbar from '../Component/Tabbar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import Tabbar from '../Component/Tabbar';
+import { RootStackParamList } from '../types';
+import { Ionicons, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { supabase } from '../lib/supabase';
 
-interface SearchItem {
-  id: string;
+// ===== TYPE DEFINITIONS =====
+interface Vegetable {
+  id: number;
   name: string;
-  description: string;
-  image: string | null;
-  is_favorited: boolean;
-  created_at: string;
+  picture: string;
+  description?: string;
+  createat: string;
 }
 
-interface ApiResponse<T> {
-  data: T;
-  message: string;
-  status: string;
+interface Fruit {
+  id: number;
+  name: string;
+  picture: string;
+  description?: string;
+  createat: string;
 }
 
+interface FavoriteItem {
+  id: number;
+  users_id: number;
+  vegetable_id?: number;
+  fruit_id?: number;
+  createat: string;
+}
+
+interface DisplayItem {
+  id: number;
+  name: string;
+  description?: string;
+  picture: string;
+  type: 'vegetable' | 'fruit';
+  isFavorite: boolean;
+  createat?: string;
+}
+
+// ===== NAVIGATION TYPE =====
+type SearchScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Search'>;
+
+const { width: screenWidth } = Dimensions.get('window');
+
+// ===== COMPONENT =====
 const SearchScreen: React.FC = () => {
-  const [searchText, setSearchText] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchItem[]>([]);
-  const [allItems, setAllItems] = useState<SearchItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const navigation = useNavigation<SearchScreenNavigationProp>();
   
-  // กำหนด BASE_URL ของ FastAPI
-  const BASE_URL = 'http://localhost:8000'; // เปลี่ยนตาม server ของคุณ
+  const [vegetables, setVegetables] = useState<Vegetable[]>([]);
+  const [fruits, setFruits] = useState<Fruit[]>([]);
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredItems, setFilteredItems] = useState<DisplayItem[]>([]);
+  
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const slideAnim = useState(new Animated.Value(50))[0];
+  
+  const CURRENT_USER_ID = 1;
 
-  // ดึงข้อมูลทั้งหมดเมื่อเริ่มต้น
-  const fetchAllItems = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      
-      const response = await fetch(`${BASE_URL}/api/items`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result: ApiResponse<SearchItem[]> = await response.json();
-      
-      if (result.status === 'success') {
-        setAllItems(result.data);
-        // แสดงข้อมูลทั้งหมดตอนเริ่มต้น
-        setSearchResults(result.data);
-      } else {
-        throw new Error(result.message || 'Failed to fetch items');
-      }
-    } catch (err) {
-      console.error('Error fetching items:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
+  useEffect(() => {
+    fetchAllData();
+    startAnimations();
   }, []);
 
-  // ค้นหาจาก backend
-  const searchFromBackend = useCallback(async (query: string) => {
-    try {
-      setIsSearching(true);
-      setError(null);
-      
-      const response = await fetch(`${BASE_URL}/api/items/search?q=${encodeURIComponent(query)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result: ApiResponse<SearchItem[]> = await response.json();
-      
-      if (result.status === 'success') {
-        setSearchResults(result.data);
-      } else {
-        throw new Error(result.message || 'Failed to search items');
-      }
-    } catch (err) {
-      console.error('Error searching items:', err);
-      // ถ้าไม่มี search endpoint ให้ใช้ local search
-      performLocalSearch(query);
-    } finally {
-      setIsSearching(false);
-    }
-  }, [allItems]);
-
-  // ค้นหาในข้อมูลที่โหลดมาแล้ว (fallback)
-  const performLocalSearch = useCallback((query: string) => {
-    if (query.trim() === '') {
-      setSearchResults(allItems);
-      return;
-    }
-
-    const filtered = allItems.filter(item =>
-      item.name.toLowerCase().includes(query.toLowerCase()) ||
-      item.description.toLowerCase().includes(query.toLowerCase())
-    );
-    
-    setSearchResults(filtered);
-  }, [allItems]);
-
-  // จัดการการค้นหา
-  const handleSearch = useCallback((text: string) => {
-    setSearchText(text);
-    
-    if (text.trim() === '') {
-      setSearchResults(allItems);
-      return;
-    }
-
-    // Debounce search
-    const searchTimeout = setTimeout(() => {
-      // ลองค้นหาจาก backend ก่อน
-      searchFromBackend(text);
-    }, 500);
-
-    return () => clearTimeout(searchTimeout);
-  }, [allItems, searchFromBackend]);
-
-  // Toggle favorite
-  const handleHeartPress = async (itemId: string) => {
-    try {
-      const response = await fetch(`${BASE_URL}/api/items/${itemId}/toggle-favorite`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result: ApiResponse<{is_favorited: boolean}> = await response.json();
-      
-      if (result.status === 'success') {
-        // อัพเดต state
-        const updateItems = (items: SearchItem[]) =>
-          items.map(item =>
-            item.id === itemId
-              ? { ...item, is_favorited: result.data.is_favorited }
-              : item
-          );
-
-        setSearchResults(updateItems);
-        setAllItems(updateItems);
-
-        Alert.alert(
-          'Success',
-          result.data.is_favorited ? 'Added to favorites!' : 'Removed from favorites!'
-        );
-      } else {
-        throw new Error(result.message || 'Failed to update favorite');
-      }
-    } catch (err) {
-      console.error('Error toggling favorite:', err);
-      Alert.alert('Error', 'Failed to update favorite status');
-    }
-  };
-
-  const handleBackPress = () => {
-    console.log('Back pressed');
-  };
-
-  const handleItemPress = (item: SearchItem) => {
-    console.log('Item pressed:', item.name);
-    // Navigate to detail screen
-  };
-
-  // โหลดข้อมูลเมื่อ component mount
   useEffect(() => {
-    fetchAllItems();
-  }, [fetchAllItems]);
+    filterItems();
+  }, [searchQuery, vegetables, fruits, favorites]);
 
-  const renderSearchItem = (item: SearchItem) => (
-    <TouchableOpacity
-      key={item.id}
-      style={styles.searchItem}
-      onPress={() => handleItemPress(item)}
-    >
-      <View style={styles.itemImageContainer}>
-        {item.image ? (
-          <Image 
-            source={{ uri: `${BASE_URL}${item.image}` }} 
-            style={styles.itemImage} 
-          />
-        ) : (
-          <View style={styles.placeholderImage}>
-            <MaterialIcons name="image" size={24} color="#ccc" />
-          </View>
-        )}
-      </View>
-      
-      <View style={styles.itemContent}>
-        <Text style={styles.itemName}>{item.name}</Text>
-        <Text style={styles.itemDescription}>{item.description}</Text>
-      </View>
-      
-      <TouchableOpacity
-        style={styles.heartButton}
-        onPress={() => handleHeartPress(item.id)}
-      >
-        <MaterialIcons 
-          name={item.is_favorited ? "favorite" : "favorite-border"} 
-          size={24} 
-          color={item.is_favorited ? "#EF4444" : "#22C55E"} 
-        />
-      </TouchableOpacity>
-    </TouchableOpacity>
-  );
+  const startAnimations = () => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
 
-  const renderEmptyState = () => {
-    if (searchText.trim() === '') {
-      return (
-        <View style={styles.emptyStateContainer}>
-          <MaterialIcons name="search" size={64} color="#666" />
-          <Text style={styles.emptyStateTitle}>Start Searching</Text>
-          <Text style={styles.emptyStateDescription}>
-            Type something to search for items
-          </Text>
-        </View>
+  // ===== API FUNCTIONS =====
+  const fetchAllData = async () => {
+    try {
+      setLoading(true);
+      console.log('Fetching data from Supabase...');
+      
+      await Promise.all([
+        fetchVegetables(),
+        fetchFruits(), 
+        fetchFavorites()
+      ]);
+      
+      console.log('All data fetched successfully from Supabase');
+    } catch (error) {
+      console.error('Error fetching all data:', error);
+      Alert.alert(
+        'Connection Error',
+        `Failed to load data from server. Please check your connection.`,
+        [{ text: 'Retry', onPress: fetchAllData }]
       );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchVegetables = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('vegetable')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (error) throw error;
+      setVegetables(data || []);
+    } catch (error) {
+      console.error('Error fetching vegetables:', error);
+      throw error;
+    }
+  };
+
+  const fetchFruits = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('fruit')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (error) throw error;
+      setFruits(data || []);
+    } catch (error) {
+      console.error('Error fetching fruits:', error);
+      throw error;
+    }
+  };
+
+  const fetchFavorites = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('favorite')
+        .select('*')
+        .eq('users_id', CURRENT_USER_ID)
+        .order('createat', { ascending: false });
+
+      if (error) throw error;
+      setFavorites(data || []);
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+      setFavorites([]);
+    }
+  };
+
+  const toggleFavorite = async (itemId: number, itemType: 'vegetable' | 'fruit') => {
+    try {
+      const existingFavorite = favorites.find(fav => 
+        itemType === 'vegetable' 
+          ? fav.vegetable_id === itemId
+          : fav.fruit_id === itemId
+      );
+
+      if (existingFavorite) {
+        const { error } = await supabase
+          .from('favorite')
+          .delete()
+          .eq('id', existingFavorite.id);
+
+        if (error) throw error;
+
+        setFavorites(prev => prev.filter(fav => fav.id !== existingFavorite.id));
+      } else {
+        const insertData: any = {
+          users_id: CURRENT_USER_ID,
+          createat: new Date().toISOString(),
+        };
+
+        if (itemType === 'vegetable') {
+          insertData.vegetable_id = itemId;
+        } else {
+          insertData.fruit_id = itemId;
+        }
+
+        const { data, error } = await supabase
+          .from('favorite')
+          .insert([insertData])
+          .select();
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          setFavorites(prev => [...prev, data[0]]);
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      Alert.alert('Error', 'Failed to update favorite. Please try again.');
+      await fetchFavorites();
+    }
+  };
+
+  // ===== SEARCH FUNCTIONS =====
+  const filterItems = () => {
+    if (!searchQuery.trim()) {
+      setFilteredItems([]);
+      return;
     }
 
-    return (
-      <View style={styles.emptyStateContainer}>
-        <MaterialIcons name="search-off" size={64} color="#666" />
-        <Text style={styles.emptyStateTitle}>No Results Found</Text>
-        <Text style={styles.emptyStateDescription}>
-          No items match your search "{searchText}"
-        </Text>
-      </View>
+    const query = searchQuery.toLowerCase().trim();
+    
+    const allItems: DisplayItem[] = [];
+
+    // Add vegetables
+    vegetables.forEach(veg => {
+      const isFavorite = favorites.some(fav => fav.vegetable_id === veg.id);
+      allItems.push({
+        id: veg.id,
+        name: veg.name,
+        description: veg.description,
+        picture: veg.picture,
+        type: 'vegetable',
+        isFavorite,
+        createat: veg.createat
+      });
+    });
+
+    // Add fruits
+    fruits.forEach(fruit => {
+      const isFavorite = favorites.some(fav => fav.fruit_id === fruit.id);
+      allItems.push({
+        id: fruit.id,
+        name: fruit.name,
+        description: fruit.description,
+        picture: fruit.picture,
+        type: 'fruit',
+        isFavorite,
+        createat: fruit.createat
+      });
+    });
+
+    // Filter items based on search query
+    const filtered = allItems.filter(item => 
+      item.name.toLowerCase().includes(query) ||
+      (item.description && item.description.toLowerCase().includes(query)) ||
+      item.type.toLowerCase().includes(query)
     );
+
+    setFilteredItems(filtered);
   };
 
-  const renderError = () => (
-    <View style={styles.errorContainer}>
-      <MaterialIcons name="error-outline" size={64} color="#EF4444" />
-      <Text style={styles.errorTitle}>Error Loading Items</Text>
-      <Text style={styles.errorDescription}>{error}</Text>
-      <TouchableOpacity 
-        style={styles.retryButton} 
-        onPress={fetchAllItems}
+  // ===== NAVIGATION =====
+  const handleCardPress = (item: DisplayItem) => {
+    navigation.navigate('Detail', {
+      itemId: item.id,
+      itemType: item.type,
+      itemName: item.name,
+      itemDescription: item.description || 'No description available',
+      itemPicture: item.picture,
+      isFavorite: item.isFavorite,
+      userId: CURRENT_USER_ID,
+    });
+  };
+
+  const handleProfilePress = () => {
+    navigation.navigate('Profile');
+  };
+
+  // ===== HELPER FUNCTIONS =====
+  const getItemEmoji = (item: DisplayItem): string => {
+    if (item.picture && !item.picture.startsWith('http')) {
+      return item.picture;
+    }
+    
+    if (item.picture && item.picture.startsWith('http')) {
+      return '🖼️';
+    }
+    
+    if (item.type === 'vegetable') {
+      const vegEmojis = ['🥕', '🥦', '🌽', '🍅', '🥬', '🌶️', '🫑', '🥒', '🧄', '🧅'];
+      return vegEmojis[item.id % vegEmojis.length];
+    } else {
+      const fruitEmojis = ['🍎', '🍊', '🍌', '🍇', '🍓', '🥝', '🍑', '🍒', '🥭', '🍍'];
+      return fruitEmojis[item.id % fruitEmojis.length];
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
+
+  // ===== RENDER FUNCTIONS =====
+  const renderItemCard = (item: DisplayItem, index: number) => (
+    <Animated.View
+      key={`${item.type}-${item.id}`}
+      style={[
+        styles.card,
+        {
+          opacity: fadeAnim,
+          transform: [
+            {
+              translateY: slideAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, -index * 10],
+              }),
+            },
+          ],
+        },
+      ]}
+    >
+      <TouchableOpacity
+        style={styles.cardTouchable}
+        activeOpacity={0.7}
+        onPress={() => handleCardPress(item)}
       >
-        <Text style={styles.retryButtonText}>Retry</Text>
+        <View style={styles.cardContent}>
+          <View style={[
+            styles.imageContainer,
+            item.type === 'vegetable' ? styles.vegetableImage : styles.fruitImage
+          ]}>
+            {item.picture && item.picture.startsWith('http') ? (
+              <Image 
+                source={{ uri: item.picture }} 
+                style={styles.itemImage}
+                resizeMode="cover"
+                onError={() => console.log('Image load error for:', item.name)}
+              />
+            ) : (
+              <Text style={styles.itemEmoji}>{getItemEmoji(item)}</Text>
+            )}
+          </View>
+          
+          <View style={styles.textContainer}>
+            <Text style={styles.itemName}>{item.name}</Text>
+            <Text style={styles.itemDescription} numberOfLines={2}>
+              {item.description || 'No description available'}
+            </Text>
+            <View style={styles.typeContainer}>
+              <View style={[
+                styles.typeBadge,
+                item.type === 'vegetable' ? styles.vegetableBadge : styles.fruitBadge
+              ]}>
+                <Text style={styles.typeText}>
+                  {item.type === 'vegetable' ? '🥬 Vegetable' : '🍎 Fruit'}
+                </Text>
+              </View>
+            </View>
+            {item.createat && (
+              <Text style={styles.dateText}>
+                Added: {new Date(item.createat).toLocaleDateString()}
+              </Text>
+            )}
+          </View>
+          
+          {/* ✅ ปุ่มหัวใจเหมือนหน้า Home */}
+          <TouchableOpacity
+            style={[
+              styles.favoriteButton,
+              item.isFavorite && styles.favoriteButtonActive
+            ]}
+            onPress={() => toggleFavorite(item.id, item.type)}
+            activeOpacity={0.7}
+          >
+            <Ionicons 
+              name={item.isFavorite ? "heart" : "heart-outline"} 
+              size={24} 
+              color={item.isFavorite ? "#EF4444" : "#9CA3AF"} 
+            />
+          </TouchableOpacity>
+        </View>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 
-  const renderContent = () => {
-    if (isLoading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#4ADE80" />
-          <Text style={styles.loadingText}>Loading items...</Text>
-        </View>
-      );
-    }
-
-    if (error) {
-      return renderError();
-    }
-
-    if (searchResults.length === 0) {
-      return renderEmptyState();
-    }
-
-    return searchResults.map(renderSearchItem);
-  };
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#4ADE80" />
-      
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Search🔍</Text>
-        <View style={styles.headerRight} />
-      </View>
-
-      {/* Search Bar */}
+  const renderSearchHeader = () => (
+    <Animated.View 
+      style={[
+        styles.searchHeader,
+        {
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }],
+        },
+      ]}
+    >
       <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <MaterialIcons name="search" size={20} color="#999" style={styles.searchIcon} />
+        <View style={styles.searchInputContainer}>
+          <Ionicons name="search" size={20} color="#6B7280" style={styles.searchIcon} />
           <TextInput
             style={styles.searchInput}
-            placeholder="Search items..."
-            placeholderTextColor="#999"
-            value={searchText}
-            onChangeText={handleSearch}
+            placeholder="Search vegetables, fruits..."
+            placeholderTextColor="#9CA3AF"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
             returnKeyType="search"
-            autoCorrect={false}
             autoCapitalize="none"
           />
-          {isSearching && (
-            <ActivityIndicator size="small" color="#4ADE80" style={styles.searchLoader} />
-          )}
-          {searchText.length > 0 && (
-            <TouchableOpacity
-              onPress={() => {
-                setSearchText('');
-                setSearchResults(allItems);
-              }}
-              style={styles.clearButton}
-            >
-              <MaterialIcons name="clear" size={20} color="#999" />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>
+              <Ionicons name="close-circle" size={20} color="#9CA3AF" />
             </TouchableOpacity>
           )}
         </View>
+        
+        <TouchableOpacity style={styles.filterButton} onPress={fetchAllData}>
+          <Ionicons name="refresh" size={22} color="#fff" />
+        </TouchableOpacity>
       </View>
 
-      {/* Results Count */}
-      {searchText.length > 0 && !isLoading && !error && (
-        <View style={styles.resultsCount}>
-          <Text style={styles.resultsCountText}>
-            {searchResults.length} result{searchResults.length !== 1 ? 's' : ''} for "{searchText}"
+      {searchQuery.length > 0 && (
+        <View style={styles.resultsInfo}>
+          <Text style={styles.resultsText}>
+            {filteredItems.length} results for "{searchQuery}"
           </Text>
         </View>
       )}
+    </Animated.View>
+  );
 
-      {/* Content */}
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.searchResults}>
-          {renderContent()}
+  // ===== LOADING STATE =====
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor="#10B981" />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#10B981" />
+          <Text style={styles.loadingText}>Loading from Supabase...</Text>
         </View>
+        <Tabbar />
+      </SafeAreaView>
+    );
+  }
+
+  // ===== MAIN RENDER =====
+  return (
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#10B981" />
+
+      
+
+      {/* ✅ Search Content */}
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
+        {renderSearchHeader()}
+
+        <Animated.View 
+          style={[
+            styles.content,
+            {
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          {searchQuery.length === 0 ? (
+            <Animated.View 
+              style={[
+                styles.emptyState,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                },
+              ]}
+            >
+              <Ionicons name="search-outline" size={64} color="#9CA3AF" />
+              <Text style={styles.emptyTitle}>Search Vegetables & Fruits</Text>
+              <Text style={styles.emptySubtitle}>
+                Find items by name, description, or type
+              </Text>
+              <View style={styles.tipsContainer}>
+                <Text style={styles.tipsTitle}>Try searching for:</Text>
+                <View style={styles.tipItem}>
+                  <Ionicons name="leaf-outline" size={16} color="#10B981" />
+                  <Text style={styles.tipText}>"Bell pepper"</Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="nutrition-outline" size={16} color="#10B981" />
+                  <Text style={styles.tipText}>"Apple"</Text>
+                </View>
+                <View style={styles.tipItem}>
+                  <Ionicons name="heart-outline" size={16} color="#10B981" />
+                  <Text style={styles.tipText}>"Vegetable" or "Fruit"</Text>
+                </View>
+              </View>
+            </Animated.View>
+          ) : filteredItems.length > 0 ? (
+            <View style={styles.resultsContainer}>
+              <Text style={styles.sectionTitle}>
+                Search Results ({filteredItems.length})
+              </Text>
+              {filteredItems.map((item, index) => renderItemCard(item, index))}
+            </View>
+          ) : (
+            <Animated.View 
+              style={[
+                styles.emptyState,
+                {
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                },
+              ]}
+            >
+              <Ionicons name="search-circle-outline" size={64} color="#9CA3AF" />
+              <Text style={styles.emptyTitle}>No results found</Text>
+              <Text style={styles.emptySubtitle}>
+                No items found for "{searchQuery}". Try different keywords.
+              </Text>
+              <TouchableOpacity style={styles.retryButton} onPress={clearSearch}>
+                <Ionicons name="backspace-outline" size={18} color="#fff" />
+                <Text style={styles.retryButtonText}>Clear Search</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          )}
+        </Animated.View>
       </ScrollView>
 
-      {/* Bottom Tab Bar */}
       <Tabbar />
     </SafeAreaView>
   );
 };
 
+// ===== STYLES =====
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4ADE80',
+    backgroundColor: '#10B981',
   },
   header: {
+    backgroundColor: '#10B981',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 8,
+    zIndex: 10,
+  },
+  headerBackground: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    paddingTop: 10,
+  },
+  headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
   },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
+  headerLeft: {
+    flex: 1,
   },
-  headerRight: {
-    width: 40,
-  },
-  searchContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-  },
-  searchBar: {
+  logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 25,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+  },
+  titleContainer: {
+    marginLeft: 12,
+  },
+  headerTitle: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#fff',
+    fontFamily: 'System',
+    letterSpacing: 0.5,
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  headerSubtitle: {
+    fontSize: 13,
+    color: '#D1FAE5',
+    opacity: 0.9,
+    marginLeft: 6,
+    fontWeight: '500',
+  },
+  headerRight: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  iconButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 12,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
+  profileButton: {
+    backgroundColor: 'rgba(59, 130, 246, 0.25)',
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#f8fafcff',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 100,
+  },
+  content: {
+    backgroundColor: '#fbfce6ff',
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    overflow: 'hidden',
+    marginTop: 0,
+    paddingTop: 10,
+    minHeight: 500,
+  },
+  // Search Header Styles
+  searchHeader: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: '#fbfce6ff',
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  searchInputContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    height: 52,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+  },
   searchIcon: {
-    marginRight: 8,
+    marginRight: 12,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#000',
-  },
-  searchLoader: {
-    marginLeft: 8,
+    color: '#1F2937',
+    paddingVertical: 8,
   },
   clearButton: {
-    marginLeft: 8,
     padding: 4,
   },
-  resultsCount: {
-    paddingHorizontal: 32,
-    paddingBottom: 8,
+  filterButton: {
+    width: 52,
+    height: 52,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#10B981',
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  resultsCountText: {
+  resultsInfo: {
+    marginTop: 16,
+  },
+  resultsText: {
     fontSize: 14,
-    color: '#000',
-    opacity: 0.7,
+    color: '#6B7280',
+    fontWeight: '600',
   },
-  content: {
-    flex: 1,
+  // Card Styles (เหมือนหน้า Home)
+  card: {
+    backgroundColor: '#7cf800c5',
+    borderRadius: 20,
+    marginBottom: 16,
+    marginHorizontal: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+    overflow: 'hidden',
   },
-  searchResults: {
-    padding: 16,
-    gap: 16,
+  cardTouchable: {
+    borderRadius: 20,
   },
-  searchItem: {
+  cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#86EFAC',
+    padding: 20,
+  },
+  imageContainer: {
+    width: 70,
+    height: 70,
     borderRadius: 16,
-    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 16,
+    overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-  itemImageContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 12,
-    marginRight: 16,
-    overflow: 'hidden',
+  vegetableImage: {
+    backgroundColor: '#ECFDF5',
+  },
+  fruitImage: {
+    backgroundColor: '#FEF3C7',
   },
   itemImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
   },
-  placeholderImage: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+  itemEmoji: {
+    fontSize: 32,
   },
-  itemContent: {
+  textContainer: {
     flex: 1,
   },
   itemName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
-    marginBottom: 4,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginBottom: 6,
+    fontFamily: 'System',
   },
   itemDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#4c5058ff',
+    marginBottom: 8,
+    lineHeight: 18,
   },
-  heartButton: {
-    padding: 8,
+  typeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  emptyStateContainer: {
+  typeBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  vegetableBadge: {
+    backgroundColor: '#D1FAE5',
+  },
+  fruitBadge: {
+    backgroundColor: '#FEF3C7',
+  },
+  typeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#065F46',
+  },
+  dateText: {
+    fontSize: 11,
+    color: '#6a6d71ff',
+    marginTop: 4,
+    fontStyle: 'italic',
+  },
+  favoriteButton: {
+    width: 38,
+    height: 38,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 64,
+    borderRadius: 12,
+    backgroundColor: '#7cf800c5',
   },
-  emptyStateTitle: {
+  favoriteButtonActive: {
+    backgroundColor: '#FEE2E2',
+  },
+  // Results Container
+  resultsContainer: {
+    paddingVertical: 10,
+  },
+  sectionTitle: {
     fontSize: 20,
-    fontWeight: '600',
-    color: '#000',
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  emptyStateDescription: {
-    fontSize: 14,
-    color: '#666',
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginBottom: 16,
+    marginTop: 10,
     textAlign: 'center',
-    paddingHorizontal: 32,
-    lineHeight: 20,
+    fontFamily: 'System',
   },
-  errorContainer: {
+  // Empty States
+  emptyState: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 64,
+    paddingVertical: 60,
+    paddingHorizontal: 40,
   },
-  errorTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#EF4444',
-    marginTop: 16,
+  emptyTitle: {
+    fontSize: 24,
+    color: '#1F2937',
+    fontWeight: 'bold',
     marginBottom: 8,
-  },
-  errorDescription: {
-    fontSize: 14,
-    color: '#666',
+    fontFamily: 'System',
+    marginTop: 16,
     textAlign: 'center',
-    paddingHorizontal: 32,
-    lineHeight: 20,
-    marginBottom: 24,
+  },
+  emptySubtitle: {
+    fontSize: 16,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginBottom: 32,
+    lineHeight: 22,
+  },
+  tipsContainer: {
+    marginTop: 24,
+    alignItems: 'flex-start',
+  },
+  tipsTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginBottom: 12,
+  },
+  tipItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    paddingHorizontal: 12,
+  },
+  tipText: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginLeft: 8,
   },
   retryButton: {
-    backgroundColor: '#EF4444',
+    backgroundColor: '#10B981',
     paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
+    paddingVertical: 14,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   retryButtonText: {
     color: '#fff',
-    fontWeight: '600',
+    fontWeight: 'bold',
+    fontSize: 16,
+    fontFamily: 'System',
+    marginLeft: 8,
   },
   loadingContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 64,
+    backgroundColor: '#F8FAFC',
   },
   loadingText: {
-    fontSize: 16,
-    color: '#666',
     marginTop: 16,
+    fontSize: 18,
+    color: '#10B981',
+    fontWeight: '600',
+    fontFamily: 'System',
   },
 });
 

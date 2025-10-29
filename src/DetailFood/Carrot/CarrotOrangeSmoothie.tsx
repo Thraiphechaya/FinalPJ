@@ -1,0 +1,353 @@
+import React from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { RootStackParamList } from '../../types'; // สมมติว่า path นี้ถูกต้อง
+
+type CarrotScreenNav = NativeStackNavigationProp<RootStackParamList, 'CarrotCake'>; 
+
+const CarrotOrangeSmoothie = () => { 
+  const navigation = useNavigation<CarrotScreenNav>();
+
+  const mainIngredients = [
+    { name: 'แครอท (หั่นชิ้นเล็ก)', amount: '1 หัว' },
+    { name: 'ส้ม (แกะเปลือก เอาเมล็ดออก)', amount: '1 ลูก' },
+    { name: 'กล้วยหอม (แช่แข็ง)', amount: '1/2 ลูก (เพิ่มความหวานข้น)' },
+    { name: 'ขิงสด (ฝานบางๆ)', amount: '1-2 แว่น (ไม่ใส่ก็ได้)' },
+    { name: 'น้ำเปล่า หรือ นมสด/นมอัลมอนด์', amount: '1/2 ถ้วย' },
+    { name: 'น้ำแข็ง (ถ้าผลไม้ไม่แข็ง)', amount: '1/2 ถ้วย' },
+  ];
+
+  const steps = [
+    { 
+      number: 1, 
+      text: 'หั่นแครอทเป็นชิ้นเล็กๆ (ถ้าเครื่องปั่นไม่แรง อาจต้มแครอทให้นิ่มก่อนเล็กน้อย)'
+    },
+     { 
+      number: 2, 
+      text: 'เตรียมส้ม แกะเปลือก แกะใยขาว และเอาเมล็ดออก'
+    },
+    { 
+      number: 3, 
+      text: 'นำส่วนผสมทั้งหมด (แครอท, ส้ม, กล้วยแช่แข็ง, ขิง(ถ้าใส่), น้ำเปล่า/นม, น้ำแข็ง(ถ้าใช้)) ใส่ลงในโถปั่น'
+    },
+    { 
+      number: 4, 
+      text: 'ปั่นด้วยความเร็วสูงจนเนื้อเนียนละเอียดเข้ากันดี'
+    },
+    { 
+      number: 5, 
+      text: 'ชิมรสชาติ ถ้าไม่หวานพอ อาจเติมน้ำผึ้งหรือน้ำเชื่อมเล็กน้อย'
+    },
+    { 
+      number: 6, 
+      text: 'เทใส่แก้ว พร้อมดื่มทันที'
+    },
+  ];
+
+  return (
+    <View style={styles.container}>
+      <ScrollView 
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Hero Section */}
+        <View style={styles.heroCard}>
+          <Image
+            source={{
+              uri: 'https://blog.mundoverde.com.br/wp-content/uploads/2016/06/shutterstock_274519613-1.jpg', 
+            }}
+            style={styles.image}
+          />
+          <View style={styles.heroContent}>
+            <Text style={styles.title}>สมูทตีแครอทส้ม</Text>
+            <View style={[styles.tasteTag, { backgroundColor: '#FFF3E0' }]}>
+              {/* ใช้ไอคอน 'cup' */}
+              <MaterialCommunityIcons name="cup" size={16} color="#FB8C00" />
+              <Text style={[styles.tasteText, { color: '#FB8C00' }]}>สดชื่น วิตามินสูง ดีต่อสุขภาพ</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Time Info */}
+        <View style={styles.timeCard}>
+          <View style={styles.timeItem}>
+            <MaterialCommunityIcons name="clock-outline" size={20} color="#4CAF50" />
+            <Text style={styles.timeLabel}>เวลาเตรียม</Text>
+            <Text style={styles.timeValue}>5 นาที</Text>
+          </View>
+          <View style={styles.timeSeparator} />
+          <View style={styles.timeItem}>
+            <MaterialCommunityIcons name="chef-hat" size={20} color="#FF9800" />
+            <Text style={styles.timeLabel}>เวลาปั่น</Text>
+            <Text style={styles.timeValue}>5 นาที</Text>
+          </View>
+          <View style={styles.timeSeparator} />
+          <View style={styles.timeItem}>
+            <MaterialCommunityIcons name="scale" size={20} color="#2196F3" />
+            <Text style={styles.timeLabel}>สำหรับ</Text>
+            <Text style={styles.timeValue}>1 แก้ว</Text>
+          </View>
+        </View>
+
+        {/* Main Ingredients Section */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeader}>
+            <MaterialCommunityIcons name="carrot" size={24} color="#F57C00" />
+            <View>
+              <Text style={styles.sectionTitle}>ส่วนผสม</Text>
+            </View>
+          </View>
+          <View style={styles.ingredientsList}>
+            {mainIngredients.map((item, index) => (
+              <View key={index} style={styles.ingredientItem}>
+                <View style={[styles.ingredientDot, { backgroundColor: '#F57C00' }]} />
+                <View style={styles.ingredientText}>
+                  <Text style={styles.ingredientName}>{item.name}</Text>
+                  <Text style={styles.ingredientAmount}>{item.amount}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Instructions Section */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeader}>
+            <MaterialCommunityIcons name="chef-hat" size={24} color="#FF6B6B" />
+            <Text style={styles.sectionTitle}>วิธีทำ</Text>
+          </View>
+          <View style={styles.stepsList}>
+            {steps.map((step, index) => (
+              <View key={index} style={styles.stepItem}>
+                <View style={styles.stepNumberContainer}>
+                  <View style={styles.stepNumber}>
+                    <Text style={styles.stepNumberText}>{step.number}</Text>
+                  </View>
+                </View>
+                {/* แก้ไขส่วนนี้ ลบการเช็ค tip ออก */}
+                <View style={styles.stepContent}>
+                  <Text style={styles.stepText}>{step.text}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+        
+        {/* Tips Section (อัปเดตไอคอนตามคำขอ) */}
+        <View style={styles.sectionCard}>
+          <View style={styles.sectionHeader}>
+            <MaterialCommunityIcons name="lightbulb-on" size={24} color="#FFD700" />
+            <Text style={styles.sectionTitle}>เคล็ดลับสำคัญ</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <MaterialCommunityIcons name="lightbulb-outline" size={16} color="#E65100" />
+            <Text style={styles.tipText}>การใส่กล้วยหอมแช่แข็ง จะช่วยเพิ่มความหวานและความข้นเนียนให้สมูทตี</Text>
+          </View>
+          <View style={styles.tipContainer}>
+            <MaterialCommunityIcons name="lightbulb-outline" size={16} color="#E65100" />
+            <Text style={styles.tipText}>ใส่ขิงเล็กน้อย จะช่วยเพิ่มกลิ่นหอมและรสชาติซ่าๆ ตัดเลี่ยนได้ดี</Text>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#A4E4A0', // สีพื้นหลัง
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    padding: 16,
+    paddingBottom: 30,
+  },
+  heroCard: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginBottom: 16,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+  },
+  image: {
+    width: '100%',
+    height: 200,
+  },
+  heroContent: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#2E7D32',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  tasteTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFF9F9', 
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    alignSelf: 'center',
+  },
+  tasteText: {
+    fontSize: 14,
+    color: '#FF6B6B', 
+    marginLeft: 6,
+    fontWeight: '500',
+  },
+  timeCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  timeItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  timeSeparator: {
+    width: 1,
+    height: 40,
+    backgroundColor: '#E0E0E0',
+  },
+  timeLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  timeValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 2,
+    textAlign: 'center',
+  },
+  sectionCard: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginLeft: 8,
+  },
+  sectionSubtitle: {
+    fontSize: 12,
+    color: '#666',
+    marginLeft: 8,
+    marginTop: 2,
+  },
+  ingredientsList: {
+    marginTop: 8,
+  },
+  ingredientItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  ingredientDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 12,
+  },
+  ingredientText: {
+    flex: 1,
+  },
+  ingredientName: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 2,
+  },
+  ingredientAmount: {
+    fontSize: 12,
+    color: '#666',
+  },
+  stepsList: {
+    marginTop: 8,
+  },
+  stepItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 20,
+  },
+  stepNumberContainer: {
+    marginRight: 12,
+  },
+  stepNumber: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#FF9800',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 2,
+  },
+  stepNumberText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  stepContent: {
+    flex: 1,
+  },
+  stepText: {
+    fontSize: 14,
+    color: '#333',
+    lineHeight: 20,
+    marginBottom: 4,
+  },
+  tipContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#FFF9E6',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  tipText: {
+    fontSize: 12,
+    color: '#E65100',
+    marginLeft: 8,
+    flex: 1,
+    lineHeight: 16,
+  },
+});
+
+export default CarrotOrangeSmoothie;
