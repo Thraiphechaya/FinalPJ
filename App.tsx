@@ -73,7 +73,7 @@ import AppleTart from './src/DetailFood/Apple/AppleTart';
 // Import Avocado
 import AvocadoEggToast from './src/DetailFood/Avocado/AvocadoEggToast';
 import AvocadoMilk from './src/DetailFood/Avocado/AvocadoMilk';
-import BakedAvocado from './src/DetailFood/Avocado/BakedAvocado';
+import BakedAvocadoFries from './src/DetailFood/Avocado/BakedAvocadoFries';
 
 // Import Bean
 import MapoTofu from './src/DetailFood/Bean/MapoTofu';
@@ -303,8 +303,8 @@ const App: React.FC = () => {
           options={{ title: 'นมอะโวคาโด' }}
         />
         <Stack.Screen 
-          name="BakedAvocado" 
-          component={BakedAvocado}
+          name="BakedAvocadoFries" 
+          component={BakedAvocadoFries}
           options={{ title: 'อะโวคาโดอบ' }}
         />
 

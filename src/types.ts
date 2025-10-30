@@ -22,17 +22,10 @@ export type RootStackParamList = {
   };
   Onboarding: undefined;
   Profile: undefined;
-  PredictionResult: {
-    prediction: {
-      predictions?: Array<{
-        class: string;
-        confidence: number;
-      }>;
-      class?: string;
-      confidence?: number;
-    };
-    imageUri: string;
-  };
+ PredictionResult: {
+  prediction: any;  // ใช้ any ชั่วคราวก่อน เลี่ยง type error
+  imageUri: string;
+};
 
   // ผลไม้
   Strawberry: undefined;
@@ -49,7 +42,7 @@ export type RootStackParamList = {
   Avocado :undefined;
   AvocadoEggToast :undefined;
   AvocadoMilk: undefined;
-  BakedAvocado :undefined;
+  BakedAvocadoFries :undefined;
 
   Bean : undefined;
   MapoTofu : undefined;

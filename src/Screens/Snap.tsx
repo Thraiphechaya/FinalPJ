@@ -34,6 +34,9 @@ type RootStackParamList = {
 
 type SnapScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
+const FASTAPI_URL = "http://10.0.0.48:8000"; // เปลี่ยนเป็น URL ของ FastAPI backend
+const CURRENT_USER_ID = 1;
+
 const SnapScreen: React.FC = () => {
   const navigation = useNavigation<SnapScreenNavigationProp>();
   const [permission, requestPermission] = useCameraPermissions();
@@ -42,8 +45,6 @@ const SnapScreen: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isUsingGallery, setIsUsingGallery] = useState(false);
   const cameraRef = useRef<CameraView>(null);
-
-  const CURRENT_USER_ID = 1;
 
   // ตรวจสอบ permission
   useEffect(() => {
@@ -58,13 +59,85 @@ const SnapScreen: React.FC = () => {
     checkPermissions();
   }, [permission, requestPermission]);
 
+  // ✅ Function อัพโหลดรูปไป Supabase Storage (เก็บประวัติ)
+  const uploadImageToSupabase = async (imageUri: string): Promise<string> => {
+    try {
+      console.log("📤 อัพโหลดรูปภาพไป Supabase Storage...");
+
+      // ตรวจสอบว่า bucket มีอยู่หรือไม่
+      const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+      
+      if (listError) {
+        console.log("⚠️ ไม่สามารถตรวจสอบ bucket:", listError.message);
+        return imageUri; // ใช้ local URI แทน
+      }
+
+      const bucketExists = buckets?.some(bucket => bucket.id === 'images');
+      
+      if (!bucketExists) {
+        console.log("🚨 Bucket 'images' ไม่พบ - ใช้ local URI แทน");
+        console.log("💡 สร้าง bucket ใน Supabase Dashboard: Storage > Create bucket > name: 'images'");
+        return imageUri;
+      }
+
+      const base64Data = await FileSystem.readAsStringAsync(imageUri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      const fileExt = imageUri.split('.').pop() || 'jpg';
+      const fileName = `snap_${Date.now()}.${fileExt}`;
+      const filePath = `snap-images/${fileName}`;
+
+      // อัพโหลดไปยัง Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('images')
+        .upload(filePath, decodeBase64(base64Data), {
+          contentType: `image/${fileExt}`,
+          upsert: false
+        });
+
+      if (error) {
+        console.log('⚠️ Upload error:', error.message);
+        return imageUri; // ใช้ local URI แทน
+      }
+
+      // ได้ public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('images')
+        .getPublicUrl(filePath);
+
+      console.log("✅ Upload สำเร็จ:", publicUrl);
+      return publicUrl;
+
+    } catch (error) {
+      console.log('⚠️ Error in uploadImageToSupabase:', error);
+      return imageUri; // fallback ใช้ local URI
+    }
+  };
+
+  // Helper function สำหรับ decode base64
+  const decodeBase64 = (base64: string) => {
+    try {
+      const base64Code = base64.split(',')[1] || base64;
+      const chars = atob(base64Code);
+      const bytes = new Uint8Array(chars.length);
+      for (let i = 0; i < chars.length; i++) {
+        bytes[i] = chars.charCodeAt(i);
+      }
+      return bytes;
+    } catch (error) {
+      console.error('Error decoding base64:', error);
+      throw new Error('Failed to decode image');
+    }
+  };
+
   // ✅ Function ขอสิทธิ์การเข้าถึง Gallery
   const requestGalleryPermission = async (): Promise<boolean> => {
     if (Platform.OS === 'ios') {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       return status === 'granted';
     }
-    return true; // Android ไม่ต้องขอ permission สำหรับ Gallery
+    return true;
   };
 
   // ✅ Function เลือกรูปจาก Gallery
@@ -93,10 +166,10 @@ const SnapScreen: React.FC = () => {
         const imageUri = result.assets[0].uri;
         setSelectedImage(imageUri);
         setIsUsingGallery(true);
-        console.log("เลือกรูปจาก Gallery:", imageUri);
+        console.log("✅ เลือกรูปจาก Gallery:", imageUri);
       }
     } catch (error) {
-      console.error("Error picking image:", error);
+      console.error("❌ Error picking image:", error);
       Alert.alert("ข้อผิดพลาด", "ไม่สามารถเลือกรูปจาก Gallery ได้");
     }
   };
@@ -116,166 +189,75 @@ const SnapScreen: React.FC = () => {
 
     try {
       setIsLoading(true);
-      console.log("เริ่มวิเคราะห์รูปจาก Gallery...");
+      console.log("🔍 เริ่มวิเคราะห์รูปจาก Gallery...");
 
-      // ✅ 1. อัพโหลดรูปไปยัง Supabase Storage
-      const imageUrl = await uploadImageToSupabase(selectedImage);
-      
-      // ✅ 2. เรียกวิเคราะห์ภาพ
-      const predictionResult = await analyzeImageWithSupabase(imageUrl);
+      // ส่งภาพไปยัง FastAPI
+      const predictionResult = await analyzeImageWithFastAPI(selectedImage);
 
-      // ✅ 3. บันทึกประวัติการวิเคราะห์
-      await saveAnalysisHistory(predictionResult, imageUrl);
-
-      // ✅ 4. นำผลลัพธ์ไปแสดงในหน้าผลลัพธ์
+      // Navigate ไปหน้าผลลัพธ์ (ใช้ local URI)
       navigation.navigate("PredictionResult", {
         prediction: predictionResult,
-        imageUri: imageUrl
+        imageUri: selectedImage
       });
 
     } catch (error) {
-      console.error("Error in handleAnalyzeFromGallery:", error);
-      
-      let errorMessage = "เกิดข้อผิดพลาดในการวิเคราะห์ภาพ";
-      
-      if (error instanceof Error) {
-        if (error.message.includes('Failed to upload')) {
-          errorMessage = "อัพโหลดรูปภาพไม่สำเร็จ\n\nตรวจสอบการเชื่อมต่ออินเตอร์เน็ต";
-        } else if (error.message.includes('Edge Function') || error.message.includes('REST API')) {
-          errorMessage = "บริการวิเคราะห์ภาพไม่พร้อมใช้งานในขณะนี้\n\nกำลังใช้ข้อมูลตัวอย่าง";
-          const mockResult = getMockPredictionData();
-          navigation.navigate("PredictionResult", {
-            prediction: mockResult,
-            imageUri: "mock_image_uri"
-          });
-          return;
-        }
-      }
-      
-      Alert.alert("เกิดข้อผิดพลาด", errorMessage);
+      console.error("❌ Error in handleAnalyzeFromGallery:", error);
+      Alert.alert("เกิดข้อผิดพลาด", "ไม่สามารถวิเคราะห์ภาพได้");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Helper function สำหรับ decode base64
-  const decodeBase64 = (base64: string) => {
+  // 🚀 Function ส่งภาพไปยัง FastAPI Backend
+  const analyzeImageWithFastAPI = async (imageUri: string): Promise<any> => {
     try {
-      const base64Code = base64.split(',')[1] || base64;
-      const chars = atob(base64Code);
-      const bytes = new Uint8Array(chars.length);
-      for (let i = 0; i < chars.length; i++) {
-        bytes[i] = chars.charCodeAt(i);
-      }
-      return bytes;
-    } catch (error) {
-      console.error('Error decoding base64:', error);
-      throw new Error('Failed to decode image');
-    }
-  };
+      console.log("📡 ส่งรูปไปยัง FastAPI backend...");
 
-  // ✅ Function อัพโหลดรูปไป Supabase Storage
-  const uploadImageToSupabase = async (imageUri: string): Promise<string> => {
-    try {
-      console.log("เริ่มอัพโหลดรูปภาพ...");
+      // สร้าง FormData สำหรับ React Native
+      const formData = new FormData();
       
-      const base64Data = await FileSystem.readAsStringAsync(imageUri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-
-      const fileExt = imageUri.split('.').pop() || 'jpg';
-      const fileName = `snap_${Date.now()}.${fileExt}`;
-      const filePath = `snap-images/${fileName}`;
-
-      console.log("กำลังอัพโหลดไปยัง:", filePath);
-
-      const { data, error } = await supabase.storage
-        .from('images')
-        .upload(filePath, decodeBase64(base64Data), {
-          contentType: `image/${fileExt}`,
-          upsert: false
-        });
-
-      if (error) {
-        console.error('Upload error:', error);
-        throw new Error(`Failed to upload image: ${error.message}`);
-      }
-
-      console.log("อัพโหลดสำเร็จ:", data);
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('images')
-        .getPublicUrl(filePath);
-
-      console.log("Public URL:", publicUrl);
-      return publicUrl;
-
-    } catch (error) {
-      console.error('Error in uploadImageToSupabase:', error);
-      throw new Error('Failed to upload image to storage');
-    }
-  };
-
-  // ✅ Function เรียก Edge Function สำหรับวิเคราะห์ภาพ
-  const analyzeImageWithSupabase = async (imageUrl: string): Promise<any> => {
-    try {
-      console.log("เรียก Edge Function ด้วย imageUrl:", imageUrl);
-
-      const { data, error } = await supabase.functions.invoke('analyze-image', {
-        body: { 
-          image_url: imageUrl,
-          user_id: CURRENT_USER_ID 
-        }
-      });
-
-      if (error) {
-        console.error('Edge Function error:', error);
-        throw new Error(`Edge Function failed: ${error.message}`);
-      }
-
-      console.log("ผลลัพธ์จาก Edge Function:", data);
-      return data;
-
-    } catch (error) {
-      console.error('Error in analyzeImageWithSupabase:', error);
-      return await analyzeImageWithREST(imageUrl);
-    }
-  };
-
-  // ✅ Function Fallback ใช้ REST API
-  const analyzeImageWithREST = async (imageUrl: string): Promise<any> => {
-    try {
-      console.log("ลองใช้ REST API แทน...");
+      // สำหรับ React Native ต้องใช้รูปแบบนี้
+      const fileInfo = {
+        uri: imageUri,
+        type: 'image/jpeg',
+        name: 'image.jpg',
+      };
       
-      const response = await fetch('https://your-ai-service.vercel.app/api/predict', {
+      // เพิ่มไฟล์เข้า FormData
+      formData.append('file', fileInfo as any);
+      formData.append('user_id', CURRENT_USER_ID.toString());
+
+      console.log("🔄 Sending request to FastAPI...");
+
+      // ส่ง request ไปยัง FastAPI
+      const response = await fetch(`${FASTAPI_URL}/api/predict`, {
         method: 'POST',
+        body: formData,
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
-        body: JSON.stringify({
-          image_url: imageUrl,
-          user_id: CURRENT_USER_ID
-        })
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`REST API failed: ${response.status} - ${errorText}`);
+        throw new Error(`FastAPI Error: ${response.status} - ${errorText}`);
       }
 
       const result = await response.json();
-      console.log("ผลลัพธ์จาก REST API:", result);
+      console.log("✅ ผลลัพธ์จาก FastAPI:", result);
+      
       return result;
 
     } catch (error) {
-      console.error('Error in analyzeImageWithREST:', error);
+      console.error('❌ Error in analyzeImageWithFastAPI:', error);
       
+      // Development mode: ใช้ mock data
       if (__DEV__) {
-        console.log("ใช้ mock data สำหรับ development");
+        console.log("⚠️ ใช้ mock data สำหรับ development");
         return getMockPredictionData();
       }
       
-      throw new Error('All analysis methods failed');
+      throw error;
     }
   };
 
@@ -286,18 +268,21 @@ const SnapScreen: React.FC = () => {
         name: "Bell Pepper",
         confidence: 0.95,
         description: "พริกหยวกมีรสชาติหวาน มีเผ็ดเล็กน้อย",
+        thai_name: "พริกหยวก",
         recipes: ["ยำพริกหยวก", "พริกหยวกยัดไส้", "ผัดพริกหยวก"]
       },
       {
         name: "Tomato", 
         confidence: 0.87,
         description: "มะเขือเทศมีรสชาติเปรี้ยวอมหวาน",
+        thai_name: "มะเขือเทศ",
         recipes: ["สลัดมะเขือเทศ", "ซุปมะเขือเทศ", "มะเขือเทศย่าง"]
       },
       {
         name: "Cucumber",
         confidence: 0.78,
         description: "แตงกวามีรสชาติสดชื่น กรอบ",
+        thai_name: "แตงกวา",
         recipes: ["ยำแตงกวา", "แตงกวาผัดไข่", "น้ำแตงกวาปั่น"]
       }
     ];
@@ -305,13 +290,15 @@ const SnapScreen: React.FC = () => {
     const randomVeg = vegetables[Math.floor(Math.random() * vegetables.length)];
     
     return {
+      success: true,
       predictions: [randomVeg],
+      top_prediction: randomVeg,
       analyzed_at: new Date().toISOString(),
-      model_version: "mock-1.0"
+      model_version: "v1.0.0"
     };
   };
 
-  // ✅ ฟังก์ชันกดถ่ายรูป (เวอร์ชันใช้ Supabase)
+  // ✅ ฟังก์ชันกดถ่ายรูป
   const handleSnapPress = async () => {
     if (!cameraRef.current || !cameraReady) {
       Alert.alert("ข้อผิดพลาด", "กล้องไม่พร้อมใช้งาน");
@@ -321,7 +308,7 @@ const SnapScreen: React.FC = () => {
     try {
       setIsLoading(true);
       
-      console.log("กำลังถ่ายรูป...");
+      console.log("📸 กำลังถ่ายรูป...");
       
       const photo = await cameraRef.current.takePictureAsync({
         quality: 0.7,
@@ -333,45 +320,63 @@ const SnapScreen: React.FC = () => {
         throw new Error("ไม่สามารถถ่ายรูปได้");
       }
 
-      console.log("รูปถ่ายได้ที่:", photo.uri);
+      console.log("✅ รูปถ่ายได้ที่:", photo.uri);
 
+      // ส่งภาพไปยัง FastAPI
+      const predictionResult = await analyzeImageWithFastAPI(photo.uri);
+      
+      // อัพโหลดไป Supabase เพื่อเก็บประวัติ (ทำแบบ background)
       const imageUrl = await uploadImageToSupabase(photo.uri);
-      const predictionResult = await analyzeImageWithSupabase(imageUrl);
+      
+      // บันทึกประวัติ
       await saveAnalysisHistory(predictionResult, imageUrl);
 
+      // Navigate ไปหน้าผลลัพธ์
       navigation.navigate("PredictionResult", {
         prediction: predictionResult,
         imageUri: imageUrl
       });
 
     } catch (error) {
-      console.error("Error in handleSnapPress:", error);
-      
-      let errorMessage = "เกิดข้อผิดพลาดในการวิเคราะห์ภาพ";
-      
-      if (error instanceof Error) {
-        if (error.message.includes('Failed to upload')) {
-          errorMessage = "อัพโหลดรูปภาพไม่สำเร็จ\n\nตรวจสอบการเชื่อมต่ออินเตอร์เน็ต";
-        } else if (error.message.includes('Edge Function') || error.message.includes('REST API')) {
-          errorMessage = "บริการวิเคราะห์ภาพไม่พร้อมใช้งานในขณะนี้\n\nกำลังใช้ข้อมูลตัวอย่าง";
-          const mockResult = getMockPredictionData();
-          navigation.navigate("PredictionResult", {
-            prediction: mockResult,
-            imageUri: "mock_image_uri"
-          });
-          return;
-        }
-      }
-      
-      Alert.alert("เกิดข้อผิดพลาด", errorMessage);
+      console.error("❌ Error in handleSnapPress:", error);
+      Alert.alert("เกิดข้อผิดพลาด", "ไม่สามารถวิเคราะห์ภาพได้");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // ✅ Function บันทึกประวัติการวิเคราะห์
+  // ✅ Function บันทึกประวัติการวิเคราะห์ลง Supabase
   const saveAnalysisHistory = async (prediction: any, imageUrl: string) => {
     try {
+      // ตรวจสอบว่าตาราง analysis_history มีอยู่หรือไม่
+      const { error: checkError } = await supabase
+        .from('analysis_history')
+        .select('id')
+        .limit(1);
+
+      if (checkError && checkError.code === 'PGRST116') {
+        console.log("🚨 ตาราง 'analysis_history' ไม่พบ");
+        console.log("💡 สร้างตารางใน Supabase SQL Editor:");
+        console.log(`
+CREATE TABLE public.analysis_history (
+  id BIGSERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  image_url TEXT NOT NULL,
+  prediction_result JSONB NOT NULL,
+  analyzed_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS (Row Level Security)
+ALTER TABLE public.analysis_history ENABLE ROW LEVEL SECURITY;
+
+-- Create policy to allow all operations (adjust as needed)
+CREATE POLICY "Allow all operations" ON public.analysis_history
+  FOR ALL USING (true);
+        `);
+        return; // ไม่บันทึกถ้าไม่มีตาราง
+      }
+
       const { error } = await supabase
         .from('analysis_history')
         .insert({
@@ -382,43 +387,62 @@ const SnapScreen: React.FC = () => {
         });
 
       if (error) {
-        console.error('Error saving analysis history:', error);
+        console.log('⚠️ Error saving analysis history:', error.message);
       } else {
-        console.log('Analysis history saved');
+        console.log('✅ Analysis history saved');
       }
     } catch (error) {
-      console.error('Error in saveAnalysisHistory:', error);
+      console.log('⚠️ Error in saveAnalysisHistory:', error);
     }
   };
 
+  // Loading State
   if (!permission) {
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#4CAF50" />
-          <Text style={styles.loadingText}>กำลังตรวจสอบสิทธิ์กล้อง...</Text>
-        </View>
-      </SafeAreaView>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#4CAF50" />
+        <Text style={styles.loadingText}>กำลังโหลด...</Text>
+      </View>
     );
   }
 
+  // No Permission State
   if (!permission.granted) {
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor="#2E7D32" />
+        <View style={styles.header}>
+          <TouchableOpacity 
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <MaterialIcons name="arrow-back" size={24} color="#fff" />
+          </TouchableOpacity>
+          <View style={styles.headerTitleContainer}>
+            <MaterialCommunityIcons name="camera" size={24} color="#fff" />
+            <Text style={styles.headerTitle}>Snap & Identify</Text>
+          </View>
+          <View style={{ width: 40 }} />
+        </View>
+
         <View style={styles.noPermissionContainer}>
-          <MaterialIcons name="no-photography" size={80} color="#A4E4A0" />
-          <Text style={styles.noPermissionTitle}>ต้องการสิทธิ์การเข้าถึงกล้อง</Text>
+          <MaterialCommunityIcons name="camera-off" size={80} color="#2E7D32" />
+          <Text style={styles.noPermissionTitle}>
+            ต้องการการอนุญาตใช้กล้อง
+          </Text>
           <Text style={styles.noPermissionText}>
-            แอปต้องการใช้กล้องเพื่อถ่ายรูปและวิเคราะห์ผักผลไม้
+            แอปต้องการเข้าถึงกล้องเพื่อถ่ายภาพผักและผลไม้{'\n'}
+            สำหรับการวิเคราะห์และระบุประเภท
           </Text>
           <TouchableOpacity 
             style={styles.permissionButton}
             onPress={requestPermission}
           >
-            <MaterialIcons name="photo-camera" size={20} color="#fff" />
-            <Text style={styles.permissionButtonText}>อนุญาตการเข้าถึงกล้อง</Text>
+            <MaterialIcons name="camera" size={20} color="#fff" />
+            <Text style={styles.permissionButtonText}>อนุญาต</Text>
           </TouchableOpacity>
         </View>
+
         <Tabbar activeTab="snap" />
       </SafeAreaView>
     );
@@ -460,7 +484,7 @@ const SnapScreen: React.FC = () => {
         {/* Camera Preview หรือ Gallery Image */}
         <View style={styles.cameraContainer}>
           {isUsingGallery && selectedImage ? (
-            // ✅ แสดงรูปจาก Gallery
+            // แสดงรูปจาก Gallery
             <View style={styles.galleryPreview}>
               <Image 
                 source={{ uri: selectedImage }} 
@@ -493,7 +517,7 @@ const SnapScreen: React.FC = () => {
               </View>
             </View>
           ) : (
-            // ✅ แสดง Camera Preview
+            // แสดง Camera Preview
             <>
               <CameraView 
                 style={styles.cameraPreview} 
@@ -521,39 +545,6 @@ const SnapScreen: React.FC = () => {
               </View>
             </>
           )}
-        </View>
-
-        {/* Info Card */}
-        <View style={styles.infoCard}>
-          <View style={styles.infoHeader}>
-            <MaterialCommunityIcons name="lightbulb" size={20} color="#FF9800" />
-            <Text style={styles.infoTitle}>
-              {isUsingGallery ? "วิเคราะห์จาก Gallery" : "เคล็ดลับการถ่ายรูป"}
-            </Text>
-          </View>
-          <View style={styles.tipsContainer}>
-            {isUsingGallery ? (
-              <View style={styles.tipItem}>
-                <MaterialCommunityIcons name="check-circle" size={16} color="#4CAF50" />
-                <Text style={styles.tipText}>เลือกรูปภาพสำเร็จ</Text>
-              </View>
-            ) : (
-              <>
-                <View style={styles.tipItem}>
-                  <MaterialCommunityIcons name="white-balance-sunny" size={16} color="#4CAF50" />
-                  <Text style={styles.tipText}>แสงสว่างเพียงพอ</Text>
-                </View>
-                <View style={styles.tipItem}>
-                  <MaterialCommunityIcons name="target" size={16} color="#4CAF50" />
-                  <Text style={styles.tipText}>โฟกัสที่วัตถุ</Text>
-                </View>
-                <View style={styles.tipItem}>
-                  <MaterialCommunityIcons name="image" size={16} color="#4CAF50" />
-                  <Text style={styles.tipText}>รูปชัดเจน</Text>
-                </View>
-              </>
-            )}
-          </View>
         </View>
 
         {/* Control Buttons */}
@@ -603,23 +594,13 @@ const SnapScreen: React.FC = () => {
             }
           </Text>
 
-          {/* Gallery Hint */}
-          {!isUsingGallery && (
-            <TouchableOpacity 
-              style={styles.galleryHint}
-              onPress={handleGalleryPress}
-            >
-              <MaterialIcons name="photo-library" size={16} color="#2E7D32" />
-              <Text style={styles.galleryHintText}>หรือเลือกรูปจาก Gallery</Text>
-            </TouchableOpacity>
-          )}
-
           {/* Debug Info */}
           {__DEV__ && (
             <View style={styles.debugInfo}>
               <Text style={styles.debugText}>
-                Mode: {isUsingGallery ? '📁 Gallery' : '📷 Camera'} | 
-                Camera: {cameraReady ? '✅ Ready' : '❌ Not Ready'}
+                📸 กล้อง: {cameraReady ? 'พร้อม' : 'ไม่พร้อม'} | 
+                📁 โหมด: {isUsingGallery ? 'Gallery' : 'Camera'} |
+                🚀 Backend: FastAPI
               </Text>
             </View>
           )}
@@ -787,45 +768,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
-  infoCard: {
-    backgroundColor: '#fff',
-    marginHorizontal: 20,
-    marginBottom: 20,
-    padding: 16,
-    borderRadius: 16,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  infoHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
-  },
-  infoTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
-  },
-  tipsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  tipItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  tipText: {
-    fontSize: 12,
-    color: '#666',
-  },
   controlContainer: { 
     paddingHorizontal: 20, 
     paddingBottom: 20,
@@ -862,19 +804,6 @@ const styles = StyleSheet.create({
     color: '#2E7D32',
     fontSize: 12,
     marginTop: 12,
-    fontWeight: '500',
-  },
-  galleryHint: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    marginTop: 12,
-    padding: 8,
-  },
-  galleryHintText: {
-    color: '#2E7D32',
-    fontSize: 14,
     fontWeight: '500',
   },
   debugInfo: {
